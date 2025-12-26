@@ -104,7 +104,7 @@ export default function ResetPassword() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white border border-border rounded-2xl p-8 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border border-border rounded-2xl p-8 shadow-sm">
           {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <img src={blinnoLogo} alt="Blinno" className="h-12 w-auto" />
@@ -145,7 +145,7 @@ export default function ResetPassword() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Create a new password"
-                      className="pl-10 pr-10 bg-white"
+                      className="pl-10 pr-10 bg-white dark:bg-slate-800"
                       {...form.register("password")}
                     />
                     <button
@@ -175,7 +175,7 @@ export default function ResetPassword() {
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm your new password"
-                      className="pl-10 pr-10 bg-white"
+                      className="pl-10 pr-10 bg-white dark:bg-slate-800"
                       {...form.register("confirmPassword")}
                     />
                     <button

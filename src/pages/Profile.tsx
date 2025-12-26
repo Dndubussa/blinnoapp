@@ -23,7 +23,7 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-slate-950">
         <Navbar />
         <main className="pt-20">
           <div className="container mx-auto max-w-4xl px-4 py-8 lg:px-8">
@@ -46,7 +46,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       <Navbar />
       <main className="pt-20">
         <section className="border-b border-border bg-muted/30 py-12">

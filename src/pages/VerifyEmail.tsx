@@ -297,7 +297,7 @@ export default function VerifyEmail() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white border border-border rounded-2xl p-8 shadow-sm">
+        <div className="bg-card border border-border rounded-2xl p-8 shadow-sm">
           {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <img src={blinnoLogo} alt="Blinno" className="h-12 w-auto" />

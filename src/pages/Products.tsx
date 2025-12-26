@@ -121,7 +121,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       <Navbar />
       <main className="pt-20">
         {/* Header */}

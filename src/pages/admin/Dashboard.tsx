@@ -117,7 +117,7 @@ export default function AdminDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white border border-border rounded-2xl p-8 max-w-md text-center shadow-sm"
+          className="bg-card border border-border rounded-2xl p-8 max-w-md text-center shadow-sm"
         >
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10 mx-auto mb-6">
             <Shield className="h-8 w-8 text-red-500" />

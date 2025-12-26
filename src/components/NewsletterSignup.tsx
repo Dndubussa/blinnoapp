@@ -46,7 +46,7 @@ const NewsletterSignup = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white border border-border rounded-2xl p-8 text-center shadow-sm"
+        className="bg-card border border-border rounded-2xl p-8 text-center shadow-sm"
       >
         <CheckCircle className="w-16 h-16 text-primary mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-foreground mb-2">You're In!</h3>

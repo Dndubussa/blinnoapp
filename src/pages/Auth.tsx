@@ -325,7 +325,7 @@ export default function Auth() {
         </Button>
 
         {/* Auth Card */}
-        <div className="bg-white border border-border rounded-2xl p-8 shadow-sm">
+        <div className="bg-card border border-border rounded-2xl p-8 shadow-sm">
           {/* Logo */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <img src={blinnoLogo} alt="Blinno" className="h-12 w-auto" />
@@ -389,7 +389,7 @@ export default function Auth() {
                   <div className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-muted-foreground">Or continue with email</span>
+                  <span className="bg-white dark:bg-slate-900 px-2 text-muted-foreground">Or continue with email</span>
                 </div>
               </div>
             </>
@@ -529,7 +529,7 @@ export default function Auth() {
                   <Input
                     id="fullName"
                     placeholder="Enter your full name"
-                    className="pl-10 bg-white"
+                    className="pl-10 bg-background"
                     {...signUpForm.register("fullName")}
                   />
                 </div>
@@ -548,7 +548,7 @@ export default function Auth() {
                     id="email"
                     type="email"
                     placeholder="Enter your email address"
-                    className="pl-10 bg-white"
+                    className="pl-10 bg-white dark:bg-slate-800"
                     {...signUpForm.register("email")}
                   />
                 </div>
@@ -567,7 +567,7 @@ export default function Auth() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
-                    className="pl-10 pr-10 bg-white"
+                    className="pl-10 pr-10 bg-white dark:bg-slate-800"
                     {...signUpForm.register("password")}
                   />
                   <button
@@ -598,7 +598,7 @@ export default function Auth() {
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
-                    className="pl-10 pr-10 bg-white"
+                    className="pl-10 pr-10 bg-white dark:bg-slate-800"
                     {...signUpForm.register("confirmPassword")}
                   />
                   <button
@@ -673,7 +673,7 @@ export default function Auth() {
                     id="resetEmail"
                     type="email"
                     placeholder="Enter your email address"
-                    className="pl-10 bg-white"
+                    className="pl-10 bg-white dark:bg-slate-800"
                     {...forgotPasswordForm.register("email")}
                   />
                 </div>
@@ -707,7 +707,7 @@ export default function Auth() {
                     id="email"
                     type="email"
                     placeholder="Enter your email address"
-                    className="pl-10 bg-white"
+                    className="pl-10 bg-white dark:bg-slate-800"
                     {...signInForm.register("email")}
                   />
                 </div>
@@ -735,7 +735,7 @@ export default function Auth() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    className="pl-10 pr-10 bg-white"
+                    className="pl-10 pr-10 bg-white dark:bg-slate-800"
                     {...signInForm.register("password")}
                   />
                   <button

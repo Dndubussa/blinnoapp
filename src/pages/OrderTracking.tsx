@@ -112,7 +112,7 @@ export default function OrderTracking() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-slate-950">
         <Navbar />
         <main className="flex min-h-[60vh] items-center justify-center pt-20">
           <div className="text-center">
@@ -130,7 +130,7 @@ export default function OrderTracking() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-slate-950">
         <Navbar />
         <main className="pt-20">
           <div className="container mx-auto px-4 py-8">
@@ -151,7 +151,7 @@ export default function OrderTracking() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-slate-950">
         <Navbar />
         <main className="flex min-h-[60vh] items-center justify-center pt-20">
           <div className="text-center">
@@ -171,7 +171,7 @@ export default function OrderTracking() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       <Navbar />
       <main className="pt-20">
         <div className="container mx-auto px-4 py-8">

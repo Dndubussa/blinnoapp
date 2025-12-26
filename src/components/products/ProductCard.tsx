@@ -95,7 +95,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="group flex gap-4 rounded-xl border border-border bg-white p-4 transition-all hover:shadow-lg"
+        className="group flex gap-4 rounded-xl border border-border bg-card p-4 transition-all hover:shadow-lg"
       >
         {/* Image with navigation */}
         <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-lg bg-muted">
@@ -190,7 +190,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="group overflow-hidden rounded-xl border border-border bg-white transition-all hover:-translate-y-1 hover:shadow-lg"
+        className="group overflow-hidden rounded-xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-lg"
       >
         {/* Image with navigation */}
         <div className="relative aspect-square overflow-hidden">

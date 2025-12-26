@@ -53,7 +53,7 @@ export default function BuyerDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
@@ -61,7 +61,7 @@ export default function BuyerDashboard() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-white">
+      <div className="min-h-screen flex w-full bg-white dark:bg-slate-950">
         <Sidebar className="border-r border-border">
           <div className="p-4 border-b border-border">
             <Link to="/" className="flex items-center gap-2">
@@ -116,7 +116,7 @@ export default function BuyerDashboard() {
         </Sidebar>
 
         <main className="flex-1">
-          <header className="h-14 border-b border-border flex items-center px-4 gap-4 bg-white">
+          <header className="h-14 border-b border-border flex items-center px-4 gap-4 bg-white dark:bg-slate-900">
             <SidebarTrigger />
             <Button variant="ghost" size="sm" onClick={() => navigate("/products")}>
               <ShoppingBag className="mr-1 h-4 w-4" />

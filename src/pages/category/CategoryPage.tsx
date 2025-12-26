@@ -172,7 +172,7 @@ export default function CategoryPage() {
 
   if (!config) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-slate-950">
         <Navbar />
         <main className="flex min-h-[60vh] items-center justify-center pt-20">
           <div className="text-center">
@@ -189,7 +189,7 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       <Navbar />
       <main className="pt-20">
         {/* Hero Section */}

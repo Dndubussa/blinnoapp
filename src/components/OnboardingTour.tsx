@@ -123,7 +123,7 @@ export function OnboardingTour({ isOpen, onClose, onComplete }: OnboardingTourPr
             transition={{ type: "spring", duration: 0.5 }}
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-full max-w-md"
           >
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden mx-4">
+            <div className="bg-card rounded-2xl shadow-2xl overflow-hidden mx-4">
               {/* Progress bar */}
               <div className="h-1 bg-muted">
                 <motion.div

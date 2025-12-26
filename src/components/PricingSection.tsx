@@ -113,7 +113,7 @@ export function PricingSection() {
   const plans = pricingModel === "subscription" ? subscriptionPlans : percentagePlans;
 
   return (
-    <section className="py-20 lg:py-28 bg-white">
+    <section className="py-20 lg:py-28 bg-background">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

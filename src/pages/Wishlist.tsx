@@ -40,7 +40,7 @@ export default function Wishlist() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-20">
         <div className="container mx-auto px-4 py-8">

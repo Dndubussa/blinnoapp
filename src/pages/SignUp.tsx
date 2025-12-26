@@ -163,7 +163,7 @@ export default function SignUp() {
           Back to Home
         </Button>
 
-        <div className="bg-white border border-border rounded-2xl p-8 shadow-sm">
+        <div className="bg-card border border-border rounded-2xl p-8 shadow-sm">
           <div className="flex items-center justify-center gap-3 mb-8">
             <img src={blinnoLogo} alt="Blinno" className="h-12 w-auto" />
           </div>

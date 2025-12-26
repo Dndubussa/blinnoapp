@@ -341,7 +341,7 @@ export default function SearchPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       <Navbar />
 
       <main className="container mx-auto px-4 pb-16 pt-24 lg:px-8">

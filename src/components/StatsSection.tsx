@@ -30,7 +30,7 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <section className="bg-white py-20 lg:py-28 border-y border-border">
+    <section className="bg-background py-20 lg:py-28 border-y border-border">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

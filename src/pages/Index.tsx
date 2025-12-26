@@ -31,7 +31,7 @@ const Index = () => {
   }, [user, loading, roles, navigate, location.pathname]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <main>
         {/* Hero - Product Search Focus */}

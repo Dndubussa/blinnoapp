@@ -292,7 +292,7 @@ export default function Newsletter() {
                         Preview how your newsletter email will appear to subscribers.
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="border rounded-lg p-4 bg-white">
+                    <div className="border rounded-lg p-4 bg-white dark:bg-slate-900">
                       <p className="text-sm text-muted-foreground mb-2">
                         <strong>Subject:</strong> {subject || "(No subject)"}
                       </p>

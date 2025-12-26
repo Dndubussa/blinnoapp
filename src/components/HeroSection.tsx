@@ -8,7 +8,7 @@ export function HeroSection() {
   const navigate = useNavigate();
   
   return (
-    <section className="relative overflow-hidden bg-white pt-32 pb-24 lg:pt-40 lg:pb-32">
+    <section className="relative overflow-hidden bg-background pt-32 pb-24 lg:pt-40 lg:pb-32">
       {/* Subtle gradient background */}
       <div 
         className="absolute inset-0"
