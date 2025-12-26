@@ -389,8 +389,8 @@ export default function Checkout() {
 
       if (itemsError) throw itemsError;
 
-      // Generate payment reference
-      const reference = `ORDER-${order.id.substring(0, 8).toUpperCase()}-${Date.now()}`;
+      // Generate payment reference (alphanumeric only, no hyphens - ClickPesa requirement)
+      const reference = `ORDER${order.id.substring(0, 8).toUpperCase()}${Date.now()}`;
 
       // Create hosted checkout link
       const { data: checkoutResult, error: checkoutError } = await supabase.functions.invoke(
@@ -599,8 +599,8 @@ export default function Checkout() {
 
       if (itemsError) throw itemsError;
 
-      // Generate payment reference
-      const reference = `ORDER-${order.id.substring(0, 8).toUpperCase()}-${Date.now()}`;
+      // Generate payment reference (alphanumeric only, no hyphens - ClickPesa requirement)
+      const reference = `ORDER${order.id.substring(0, 8).toUpperCase()}${Date.now()}`;
 
       if (paymentMethod === "hosted_checkout") {
         // Create hosted checkout session with return URL
