@@ -139,7 +139,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="mt-4">
         {isOutOfStock ? (
           <span className="text-sm font-medium text-destructive">Out of Stock</span>
-          {formatPrice(product.price, (product.currency || 'USD') as Currency)}
+        ) : (
           <span className="inline-flex items-center gap-1 text-sm font-medium text-green-500">
             <Check className="h-4 w-4" />
             In Stock
