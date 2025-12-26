@@ -594,60 +594,107 @@ export default function Checkout() {
       // Generate payment reference
       const reference = `ORDER-${order.id.substring(0, 8).toUpperCase()}-${Date.now()}`;
 
-      // Use Mobile Money (USSD push via ClickPesa)
-      // Format phone number for ClickPesa (ensure it starts with 255)
-      let formattedPhone = paymentPhone.replace(/\D/g, "");
-      if (formattedPhone.startsWith("0")) {
-        formattedPhone = "255" + formattedPhone.substring(1);
-      } else if (!formattedPhone.startsWith("255")) {
-        formattedPhone = "255" + formattedPhone;
-      }
-    
-      // Initiate ClickPesa mobile money payment
-      // Use validated order total for payment
-      const { data: paymentResult, error: paymentError } = await supabase.functions.invoke(
-        "clickpesa-payment",
-        {
-          body: {
-            action: "initiate",
-            amount: validatedOrderTotalTZS, // Use validated total
-            currency: "TZS",
-            phone_number: formattedPhone,
-            network: selectedNetwork,
-            reference: reference,
-            description: `Blinno Order Payment - ${validatedItems.length} item(s)`,
-            order_id: order.id,
-          },
+      if (paymentMethod === "hosted_checkout") {
+        // Create hosted checkout session with return URL
+        const currentURL = window.location.origin;
+        const returnUrl = `${currentURL}/checkout/success?order_id=${order.id}&reference=${reference}`;
+        
+        const { data: hostedCheckoutResult, error: hostedCheckoutError } = await supabase.functions.invoke(
+          "clickpesa-payment",
+          {
+            body: {
+              action: "create-hosted-checkout",
+              amount: validatedOrderTotalTZS,
+              currency: "TZS",
+              reference: reference,
+              description: `Blinno Order Payment - ${validatedItems.length} item(s)`,
+              return_url: returnUrl,
+              order_id: order.id,
+              customer_email: shippingData.email,
+              customer_phone: paymentPhone,
+            },
+          }
+        );
+
+        if (hostedCheckoutError) {
+          console.error("Hosted checkout creation error:", hostedCheckoutError);
+          throw new Error(hostedCheckoutError.message || "Failed to create payment link. Please try again.");
         }
-      );
-      
-      if (paymentError) {
-        console.error("Payment initiation error:", paymentError);
-        console.error("Payment error details:", paymentError.message);
-        throw new Error(paymentError.message || "Failed to initiate payment. Please try again.");
-      }
-      
-      if (!paymentResult?.success) {
-        const errorMsg = paymentResult?.error || paymentResult?.message || "Payment initiation failed";
-        console.error("Payment result error:", errorMsg, paymentResult);
-        throw new Error(errorMsg);
-      }
 
-      // Store payment reference and transaction ID for status polling
-      setPaymentReference(reference);
-      
-      // Store transaction ID from Flutterwave response if available
-      const transactionId = paymentResult?.data?.transaction_id || paymentResult?.data?.reference || null;
-      if (transactionId) {
-        // Store in a ref or state for status checking
-        // The backend will look it up by reference, but we can also use transaction_id directly
-      }
+        if (!hostedCheckoutResult?.success) {
+          const errorMsg = hostedCheckoutResult?.error || hostedCheckoutResult?.message || "Failed to create payment link";
+          console.error("Hosted checkout error:", errorMsg, hostedCheckoutResult);
+          throw new Error(errorMsg);
+        }
 
-      // Show USSD push notification
-      toast.success(
-        `A USSD prompt has been sent to ${formattedPhone}. Please enter your PIN to complete the payment.`,
-        { duration: 10000 }
-      );
+        // Store payment reference
+        setPaymentReference(reference);
+
+        // Redirect to hosted checkout URL
+        const checkoutUrl = hostedCheckoutResult?.checkout_url || hostedCheckoutResult?.data?.checkout_url;
+        if (checkoutUrl) {
+          toast.success("Redirecting to payment page...");
+          window.location.href = checkoutUrl;
+          return;
+        } else {
+          throw new Error("No checkout URL returned from payment provider");
+        }
+      } else {
+        // Use Mobile Money (USSD push via ClickPesa)
+        // Format phone number for ClickPesa (ensure it starts with 255)
+        let formattedPhone = paymentPhone.replace(/\D/g, "");
+        if (formattedPhone.startsWith("0")) {
+          formattedPhone = "255" + formattedPhone.substring(1);
+        } else if (!formattedPhone.startsWith("255")) {
+          formattedPhone = "255" + formattedPhone;
+        }
+      
+        // Initiate ClickPesa mobile money payment
+        // Use validated order total for payment
+        const { data: paymentResult, error: paymentError } = await supabase.functions.invoke(
+          "clickpesa-payment",
+          {
+            body: {
+              action: "initiate",
+              amount: validatedOrderTotalTZS, // Use validated total
+              currency: "TZS",
+              phone_number: formattedPhone,
+              network: selectedNetwork,
+              reference: reference,
+              description: `Blinno Order Payment - ${validatedItems.length} item(s)`,
+              order_id: order.id,
+            },
+          }
+        );
+        
+        if (paymentError) {
+          console.error("Payment initiation error:", paymentError);
+          console.error("Payment error details:", paymentError.message);
+          throw new Error(paymentError.message || "Failed to initiate payment. Please try again.");
+        }
+        
+        if (!paymentResult?.success) {
+          const errorMsg = paymentResult?.error || paymentResult?.message || "Payment initiation failed";
+          console.error("Payment result error:", errorMsg, paymentResult);
+          throw new Error(errorMsg);
+        }
+
+        // Store payment reference and transaction ID for status polling
+        setPaymentReference(reference);
+        
+        // Store transaction ID from payment response if available
+        const transactionId = paymentResult?.data?.transaction_id || paymentResult?.data?.reference || null;
+        if (transactionId) {
+          // Store in a ref or state for status checking
+          // The backend will look it up by reference, but we can also use transaction_id directly
+        }
+
+        // Show USSD push notification
+        toast.success(
+          `A USSD prompt has been sent to ${formattedPhone}. Please enter your PIN to complete the payment.`,
+          { duration: 10000 }
+        );
+      }
 
       // Send order confirmation email
       await supabase.functions.invoke("order-confirmation", {
@@ -1071,66 +1118,160 @@ export default function Checkout() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Smartphone className="h-5 w-5 text-primary" />
-                      Mobile Money Payment
+                      <CreditCard className="h-5 w-5 text-primary" />
+                      Payment Method
                     </CardTitle>
                     <CardDescription>
-                      Select your mobile money provider and enter your phone number
+                      Choose how you'd like to pay for your order
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    {/* Network Selection */}
+                    {/* Payment Method Selection */}
                     <div className="space-y-3">
                       <Label className="text-base font-medium">Select Payment Method</Label>
                       <RadioGroup
-                        value={selectedNetwork}
-                        onValueChange={(value) => setSelectedNetwork(value as MobileNetwork)}
-                        className="grid grid-cols-2 gap-4"
+                        value={paymentMethod}
+                        onValueChange={(value) => setPaymentMethod(value as PaymentMethod)}
+                        className="space-y-3"
                       >
-                        {mobileNetworks.map((network) => (
-                          <div key={network.id}>
-                            <RadioGroupItem
-                              value={network.id}
-                              id={network.id}
-                              className="peer sr-only"
-                              disabled={isProcessing}
-                            />
-                            <Label
-                              htmlFor={network.id}
-                              className={`flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 transition-all ${
-                                isProcessing
-                                  ? "cursor-not-allowed opacity-50"
-                                  : "hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                              } peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary`}
-                            >
-                              <div className={`h-10 w-10 rounded-full ${network.color} flex items-center justify-center mb-2`}>
-                                <Phone className="h-5 w-5 text-white" />
+                        {/* Hosted Checkout Option */}
+                        <div>
+                          <RadioGroupItem
+                            value="hosted_checkout"
+                            id="hosted_checkout"
+                            className="peer sr-only"
+                            disabled={isProcessing}
+                          />
+                          <Label
+                            htmlFor="hosted_checkout"
+                            className={`flex flex-col gap-3 rounded-lg border-2 border-muted bg-popover p-4 transition-all cursor-pointer ${
+                              isProcessing
+                                ? "cursor-not-allowed opacity-50"
+                                : "hover:bg-accent hover:text-accent-foreground"
+                            } peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                                <CreditCard className="h-5 w-5 text-white" />
                               </div>
-                              <span className="font-medium">{network.name}</span>
-                            </Label>
-                          </div>
-                        ))}
+                              <div>
+                                <span className="font-medium block">Hosted Checkout</span>
+                                <p className="text-sm text-muted-foreground">Secure payment page with all payment options</p>
+                              </div>
+                            </div>
+                          </Label>
+                        </div>
+
+                        {/* Mobile Money USSD Option */}
+                        <div>
+                          <RadioGroupItem
+                            value="mobile_money"
+                            id="mobile_money"
+                            className="peer sr-only"
+                            disabled={isProcessing}
+                          />
+                          <Label
+                            htmlFor="mobile_money"
+                            className={`flex flex-col gap-3 rounded-lg border-2 border-muted bg-popover p-4 transition-all cursor-pointer ${
+                              isProcessing
+                                ? "cursor-not-allowed opacity-50"
+                                : "hover:bg-accent hover:text-accent-foreground"
+                            } peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="h-10 w-10 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                                <Smartphone className="h-5 w-5 text-white" />
+                              </div>
+                              <div>
+                                <span className="font-medium block">Mobile Money (USSD)</span>
+                                <p className="text-sm text-muted-foreground">Instant payment via USSD push to your phone</p>
+                              </div>
+                            </div>
+                          </Label>
+                        </div>
                       </RadioGroup>
                     </div>
 
-                    {/* Phone Number Input */}
-                    <div className="space-y-2">
-                      <Label htmlFor="payment-phone" className="text-base font-medium">
-                        Mobile Money Number
-                      </Label>
-                      <Input
-                        id="payment-phone"
-                        type="tel"
-                        placeholder="0712 345 678"
-                        value={paymentPhone}
-                        onChange={(e) => setPaymentPhone(e.target.value)}
-                        disabled={isProcessing}
-                        className="text-lg"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Enter the phone number registered with {selectedNetwork}
-                      </p>
-                    </div>
+                    {/* Hosted Checkout - No additional details needed */}
+                    {paymentMethod === "hosted_checkout" && (
+                      <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+                        <h4 className="font-medium text-blue-700 mb-2">Secure Payment:</h4>
+                        <ul className="text-sm text-blue-600 space-y-1 list-disc list-inside">
+                          <li>Encrypted connection for your security</li>
+                          <li>Multiple payment options available</li>
+                          <li>Instant confirmation of payment</li>
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Mobile Money Option */}
+                    {paymentMethod === "mobile_money" && (
+                      <>
+                        {/* Network Selection */}
+                        <div className="space-y-3">
+                          <Label className="text-base font-medium">Select Mobile Money Provider</Label>
+                          <RadioGroup
+                            value={selectedNetwork}
+                            onValueChange={(value) => setSelectedNetwork(value as MobileNetwork)}
+                            className="grid grid-cols-2 gap-4"
+                          >
+                            {mobileNetworks.map((network) => (
+                              <div key={network.id}>
+                                <RadioGroupItem
+                                  value={network.id}
+                                  id={network.id}
+                                  className="peer sr-only"
+                                  disabled={isProcessing}
+                                />
+                                <Label
+                                  htmlFor={network.id}
+                                  className={`flex flex-col items-center justify-center rounded-lg border-2 border-muted bg-popover p-4 transition-all ${
+                                    isProcessing
+                                      ? "cursor-not-allowed opacity-50"
+                                      : "hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                                  } peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary`}
+                                >
+                                  <div className={`h-10 w-10 rounded-full ${network.color} flex items-center justify-center mb-2`}>
+                                    <Phone className="h-5 w-5 text-white" />
+                                  </div>
+                                  <span className="font-medium">{network.name}</span>
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        </div>
+
+                        {/* Phone Number Input */}
+                        <div className="space-y-2">
+                          <Label htmlFor="payment-phone" className="text-base font-medium">
+                            Mobile Money Number
+                          </Label>
+                          <Input
+                            id="payment-phone"
+                            type="tel"
+                            placeholder="0712 345 678"
+                            value={paymentPhone}
+                            onChange={(e) => setPaymentPhone(e.target.value)}
+                            disabled={isProcessing}
+                            className="text-lg"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Enter the phone number registered with {selectedNetwork}
+                          </p>
+                        </div>
+
+                        {/* Mobile Money Instructions */}
+                        <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+                          <h4 className="font-medium text-blue-700 mb-2">How it works:</h4>
+                          <ol className="text-sm text-blue-600 space-y-1 list-decimal list-inside">
+                            <li>Click "Pay Now" to initiate the payment</li>
+                            <li>You'll receive a USSD prompt on your phone</li>
+                            <li>Enter your {selectedNetwork} PIN to confirm</li>
+                            <li>Your order will be processed automatically</li>
+                          </ol>
+                        </div>
+                      </>
+                    )}
 
                     {/* Payment Info */}
                     <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
@@ -1142,19 +1283,6 @@ export default function Checkout() {
                         â‰ˆ {formatPrice(orderTotal)} USD
                       </p>
                     </div>
-
-                    {/* Mobile Money Instructions */}
-                    {paymentMethod === "mobile_money" && (
-                      <div className="rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
-                        <h4 className="font-medium text-blue-700 mb-2">How it works:</h4>
-                        <ol className="text-sm text-blue-600 space-y-1 list-decimal list-inside">
-                          <li>Click "Pay Now" to initiate the payment</li>
-                          <li>You'll receive a USSD prompt on your phone</li>
-                          <li>Enter your {selectedNetwork} PIN to confirm</li>
-                          <li>Your order will be processed automatically</li>
-                        </ol>
-                      </div>
-                    )}
 
                     <div className="flex gap-3">
                       <Button
@@ -1179,7 +1307,7 @@ export default function Checkout() {
                         ) : (
                           <>
                             <CreditCard className="mr-2 h-4 w-4" />
-                            Pay Now ({formatPriceTZS(orderTotal)})
+                            {paymentMethod === "hosted_checkout" ? "Go to Payment Page" : "Pay Now"} ({formatPriceTZS(orderTotal)})
                           </>
                         )}
                       </Button>
