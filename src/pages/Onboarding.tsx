@@ -379,11 +379,7 @@ export default function Onboarding() {
     becomeSeller,
     paymentStatus,
     paymentReference,
-<<<<<<< HEAD
     sellerSteps,
-=======
-    sellerSteps.length,
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
     completeOnboarding,
     navigate,
     toast,
