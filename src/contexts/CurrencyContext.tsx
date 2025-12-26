@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Currency, detectUserCurrency, SUPPORTED_CURRENCIES } from '@/lib/currency';
+import { Currency, detectUserCurrency, SUPPORTED_CURRENCIES, formatPriceWithConversion } from '@/lib/currency';
 
 interface CurrencyContextType {
   userCurrency: Currency;
   setUserCurrency: (currency: Currency) => void;
+  formatPrice: (price: number, productCurrency?: Currency) => string;
   isLoading: boolean;
 }
 
@@ -50,8 +51,12 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const formatPrice = (price: number, productCurrency: Currency = 'USD'): string => {
+    return formatPriceWithConversion(price, productCurrency, userCurrency);
+  };
+
   return (
-    <CurrencyContext.Provider value={{ userCurrency, setUserCurrency, isLoading }}>
+    <CurrencyContext.Provider value={{ userCurrency, setUserCurrency, formatPrice, isLoading }}>
       {children}
     </CurrencyContext.Provider>
   );
