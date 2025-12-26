@@ -294,15 +294,13 @@ export default function Checkout() {
           );
         }
 
-        if (product.seller_id !== cartItem.seller_id) {
-          throw new Error(`Product ${product.title} seller mismatch. Please refresh your cart.`);
-        }
-
+        // Use the current seller_id from the database (product may have been reassigned)
+        // This prevents "seller mismatch" errors when seller information changes
         return {
           ...cartItem,
           validatedPrice: product.price,
           validatedCurrency: (product.currency || 'USD') as Currency,
-          validatedSellerId: product.seller_id,
+          validatedSellerId: product.seller_id, // Always use current seller from DB
           validatedCategory: product.category,
         };
       });
@@ -495,16 +493,13 @@ export default function Checkout() {
           );
         }
 
-        // Validate seller_id matches (prevent seller manipulation)
-        if (product.seller_id !== cartItem.seller_id) {
-          throw new Error(`Product ${product.title} seller mismatch. Please refresh your cart.`);
-        }
-
+        // Use the current seller_id from the database (product may have been reassigned)
+        // This prevents "seller mismatch" errors when seller information changes
         return {
           ...cartItem,
           validatedPrice: product.price, // Use database price, not client price
           validatedCurrency: (product.currency || 'USD') as Currency, // Include currency
-          validatedSellerId: product.seller_id,
+          validatedSellerId: product.seller_id, // Always use current seller from DB
           validatedCategory: product.category, // Include category for exemption calculation
         };
       });
