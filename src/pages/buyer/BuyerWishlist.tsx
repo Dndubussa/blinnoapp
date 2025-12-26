@@ -1,22 +1,15 @@
-import { useWishlist } from "@/hooks/useWishlist";
+﻿import { useWishlist } from "@/hooks/useWishlist";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
-<<<<<<< HEAD
-=======
-import { useCurrency } from "@/hooks/useCurrency";
-import { Currency } from "@/lib/currency";
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
+
 
 export default function BuyerWishlist() {
   const { items, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
-<<<<<<< HEAD
-=======
-  const { formatPrice } = useCurrency();
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
+
 
   return (
     <div className="space-y-6">
@@ -56,11 +49,7 @@ export default function BuyerWishlist() {
                   {product.category}
                 </p>
                 <p className="text-lg font-bold text-foreground mb-3">
-<<<<<<< HEAD
                   ${product.price.toFixed(2)}
-=======
-                  {formatPrice(product.price, product.currency as Currency || 'USD')}
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -71,10 +60,7 @@ export default function BuyerWishlist() {
                         id: product.id,
                         title: product.title,
                         price: product.price,
-<<<<<<< HEAD
-=======
-                        currency: product.currency || 'USD',
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
+
                         image: product.image,
                         seller_id: product.seller_id,
                         stock_quantity: product.stock_quantity,
@@ -115,3 +101,4 @@ export default function BuyerWishlist() {
     </div>
   );
 }
+

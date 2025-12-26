@@ -1,14 +1,11 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+﻿import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
 
 export interface WishlistItem {
   id: string;
   title: string;
   price: number;
-<<<<<<< HEAD
-=======
-  currency?: string;
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
+
   image: string | null;
   category: string;
   seller_id: string;
@@ -104,3 +101,4 @@ export function useWishlist() {
   }
   return context;
 }
+

@@ -1,8 +1,5 @@
-import { useParams, Link } from "react-router-dom";
-<<<<<<< HEAD
-=======
-import { useState, useEffect } from "react";
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
+﻿import { useParams, Link } from "react-router-dom";
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
@@ -16,20 +13,12 @@ import { VideoPreview } from "@/components/product-detail/VideoPreview";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Package } from "lucide-react";
-<<<<<<< HEAD
 import { getAllProductImages } from "@/lib/imageUtils";
-=======
-import { getAllProductImages, getAllProductImagesSync } from "@/lib/imageUtils";
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
 
-<<<<<<< HEAD
-=======
-  const [processedImages, setProcessedImages] = useState<string[]>([]);
-  
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
+
   const { data: product, isLoading: productLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
@@ -106,26 +95,7 @@ export default function ProductDetail() {
     );
   }
 
-<<<<<<< HEAD
-=======
-  // Process images when product changes
-  useEffect(() => {
-    if (product) {
-      const processImages = async () => {
-        const processed = await getAllProductImages({
-          images: product.images,
-          category: product.category,
-          attributes: product.attributes as Record<string, any> || null,
-        });
-        setProcessedImages(processed);
-      };
-      processImages();
-    } else {
-      setProcessedImages([]);
-    }
-  }, [product]);
-  
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -143,54 +113,29 @@ export default function ProductDetail() {
           {/* Product Section */}
           <div className="grid gap-8 lg:grid-cols-2">
             <ImageGallery 
-<<<<<<< HEAD
               images={getAllProductImages(product)}
-=======
-              images={processedImages.length > 0 ? processedImages : getAllProductImagesSync({
-                images: product.images,
-                category: product.category,
-                attributes: product.attributes as Record<string, any> || null,
-              })}
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
               title={product.title} 
             />
             <ProductInfo product={product} />
           </div>
 
           {/* Preview Section for Music and Videos */}
-<<<<<<< HEAD
           {product.attributes?.previewFile && product.category === "Music" && (
             <div className="mt-8">
               <AudioPreview
                 previewUrl={product.attributes.previewFile}
                 artist={product.attributes.artist}
-=======
-          {(product.attributes as Record<string, any>)?.previewFile && product.category === "Music" && (
-            <div className="mt-8">
-              <AudioPreview
-                previewUrl={(product.attributes as Record<string, any>).previewFile}
-                artist={(product.attributes as Record<string, any>).artist}
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
                 title={product.title}
               />
             </div>
           )}
 
-<<<<<<< HEAD
           {product.attributes?.previewVideo && product.category === "Courses" && (
             <div className="mt-8">
               <VideoPreview
                 previewUrl={product.attributes.previewVideo}
                 title={product.attributes.courseTitle || product.title}
                 thumbnail={product.attributes.thumbnail}
-=======
-          {(product.attributes as Record<string, any>)?.previewVideo && product.category === "Courses" && (
-            <div className="mt-8">
-              <VideoPreview
-                previewUrl={(product.attributes as Record<string, any>).previewVideo}
-                title={(product.attributes as Record<string, any>).courseTitle || product.title}
-                thumbnail={(product.attributes as Record<string, any>).thumbnail}
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
               />
             </div>
           )}
@@ -208,3 +153,4 @@ export default function ProductDetail() {
     </div>
   );
 }
+

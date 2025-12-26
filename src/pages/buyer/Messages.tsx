@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+﻿import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { MessageSquare, Send, ArrowLeft, Search, User } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -141,11 +141,7 @@ export default function BuyerMessages() {
       fetchMessages(selectedConversation.id);
       markMessagesAsRead(selectedConversation.id);
     }
-<<<<<<< HEAD
   }, [selectedConversation, fetchMessages, markMessagesAsRead]);
-=======
-  }, [selectedConversation?.id]);
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -404,3 +400,4 @@ export default function BuyerMessages() {
     </div>
   );
 }
+

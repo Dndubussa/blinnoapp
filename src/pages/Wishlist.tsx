@@ -33,10 +33,6 @@ export default function Wishlist() {
       id: item.id,
       title: item.title,
       price: item.price,
-<<<<<<< HEAD
-=======
-      currency: item.currency || 'USD',
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
       image: item.image,
       stock_quantity: item.stock_quantity,
       seller_id: item.seller_id,
@@ -132,11 +128,7 @@ export default function Wishlist() {
                       </Link>
                       <div className="mt-3 flex items-center justify-between">
                         <span className="text-lg font-bold text-primary">
-<<<<<<< HEAD
                           {formatPrice(item.price, 'USD')}
-=======
-                          {formatPrice(item.price, item.currency as Currency || 'USD')}
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
                         </span>
                         <Button
                           size="sm"

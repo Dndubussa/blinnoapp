@@ -11,10 +11,6 @@ import { usePurchasedProducts } from "@/hooks/usePurchasedProducts";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrency } from "@/hooks/useCurrency";
 import { Currency } from "@/lib/currency";
-<<<<<<< HEAD
-=======
-import { Json } from "@/integrations/supabase/types";
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 import { sanitizeText } from "@/lib/sanitize";
 
 interface Product {
@@ -28,11 +24,7 @@ interface Product {
   stock_quantity: number | null;
   images?: string[] | null;
   seller_id: string;
-<<<<<<< HEAD
   attributes?: any;
-=======
-  attributes: Json | null;
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 }
 
 interface ProductInfoProps {
@@ -71,11 +63,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const isWishlisted = isInWishlist(product.id);
   const isDigital = isDigitalProduct(product.category);
   const isPurchased = hasPurchased(product.id);
-<<<<<<< HEAD
   const attributes = product.attributes || {};
-=======
-  const attributes = product.attributes as Record<string, any> || {} as Record<string, any>;
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   const handleAddToCart = () => {
     addToCart(
@@ -83,15 +71,9 @@ export function ProductInfo({ product }: ProductInfoProps) {
         id: product.id,
         title: product.title,
         price: product.price,
-<<<<<<< HEAD
-=======
         currency: product.currency || 'USD',
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
-        image: product.images?.[0] || null,
-        stock_quantity: product.stock_quantity,
-        seller_id: product.seller_id,
-      },
-      quantity
+        quantity,
+      }
     );
   };
 
@@ -103,10 +85,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         id: product.id,
         title: product.title,
         price: product.price,
-<<<<<<< HEAD
-=======
         currency: product.currency || 'USD',
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
         image: product.images?.[0] || null,
         category: product.category,
         seller_id: product.seller_id,
@@ -114,7 +93,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
       });
     }
   };
-
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -153,11 +131,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Price */}
       <div className="mt-4 flex items-baseline gap-2">
         <span className="text-3xl font-bold text-primary">
-<<<<<<< HEAD
           {formatPrice(product.price, (product.currency || 'USD') as Currency)}
-=======
-          {formatPrice(product.price, product.currency as Currency || 'USD')}
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
         </span>
       </div>
 
@@ -165,11 +139,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="mt-4">
         {isOutOfStock ? (
           <span className="text-sm font-medium text-destructive">Out of Stock</span>
-        ) : isLowStock ? (
-          <span className="text-sm font-medium text-amber-500">
-            Only {product.stock_quantity} left in stock
-          </span>
-        ) : (
+          {formatPrice(product.price, (product.currency || 'USD') as Currency)}
           <span className="inline-flex items-center gap-1 text-sm font-medium text-green-500">
             <Check className="h-4 w-4" />
             In Stock

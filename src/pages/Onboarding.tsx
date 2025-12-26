@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+﻿import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -37,14 +37,14 @@ interface OnboardingData {
 }
 
 const buyerInterests = [
-  { id: "electronics", label: "Electronics", icon: "💻" },
-  { id: "fashion", label: "Fashion", icon: "👗" },
-  { id: "home", label: "Home & Living", icon: "🏠" },
-  { id: "books", label: "Books", icon: "📚" },
-  { id: "beauty", label: "Beauty", icon: "💄" },
-  { id: "sports", label: "Sports", icon: "⚽" },
-  { id: "food", label: "Food & Drinks", icon: "🍕" },
-  { id: "art", label: "Art & Crafts", icon: "🎨" },
+  { id: "electronics", label: "Electronics", icon: "ðŸ’»" },
+  { id: "fashion", label: "Fashion", icon: "ðŸ‘—" },
+  { id: "home", label: "Home & Living", icon: "ðŸ " },
+  { id: "books", label: "Books", icon: "ðŸ“š" },
+  { id: "beauty", label: "Beauty", icon: "ðŸ’„" },
+  { id: "sports", label: "Sports", icon: "âš½" },
+  { id: "food", label: "Food & Drinks", icon: "ðŸ•" },
+  { id: "art", label: "Art & Crafts", icon: "ðŸŽ¨" },
 ];
 
 export default function Onboarding() {
@@ -446,11 +446,7 @@ export default function Onboarding() {
       // All steps completed - handle final completion
       await handleSellerComplete();
     }
-<<<<<<< HEAD
   }, [sellerStepIndex, sellerSteps, data, user, completeStep, toast, handleSellerComplete]);
-=======
-  }, [sellerStepIndex, sellerSteps.length, data, user, completeStep, toast, handleSellerComplete]);
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   const handleSellerBack = () => {
     if (sellerStepIndex > 0) {
@@ -562,11 +558,7 @@ export default function Onboarding() {
       });
       setIsProcessingPayment(false);
     }
-<<<<<<< HEAD
   }, [data.pricingModel, data.plan, user, completeStep, toast, handleSellerNext]);
-=======
-  }, [data.pricingModel, data.plan, user, completeStep, toast]);
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   const handlePayment = async () => {
     if (!data.phoneNumber) {
@@ -1198,3 +1190,4 @@ export default function Onboarding() {
     </div>
   );
 }
+

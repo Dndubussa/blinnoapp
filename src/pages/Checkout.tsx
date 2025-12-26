@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
@@ -301,11 +301,7 @@ export default function Checkout() {
         return {
           ...cartItem,
           validatedPrice: product.price,
-<<<<<<< HEAD
           validatedCurrency: (product.currency || 'USD') as Currency,
-=======
-          validatedCurrency: (product.currency as Currency) || 'USD',
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
           validatedSellerId: product.seller_id,
           validatedCategory: product.category,
         };
@@ -507,11 +503,7 @@ export default function Checkout() {
         return {
           ...cartItem,
           validatedPrice: product.price, // Use database price, not client price
-<<<<<<< HEAD
           validatedCurrency: (product.currency || 'USD') as Currency, // Include currency
-=======
-          validatedCurrency: (product.currency as Currency) || 'USD', // Include currency
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
           validatedSellerId: product.seller_id,
           validatedCategory: product.category, // Include category for exemption calculation
         };
@@ -727,11 +719,8 @@ export default function Checkout() {
 
   // Payment status polling
   const checkPaymentStatus = useCallback(async () => {
-<<<<<<< HEAD
     if (!paymentReference || !orderId || paymentStatus !== "pending") return;
 
-=======
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
     try {
       // Use reference only - backend will look up transaction_id from database
       const { data, error } = await supabase.functions.invoke("clickpesa-payment", {
@@ -756,11 +745,7 @@ export default function Checkout() {
     } catch (error) {
       console.error("Error checking payment status:", error);
     }
-<<<<<<< HEAD
   }, [paymentReference, orderId, paymentStatus]);
-=======
-  }, [paymentReference]);
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   // Poll for payment status every 5 seconds, up to 24 times (2 minutes)
   useEffect(() => {
@@ -774,11 +759,7 @@ export default function Checkout() {
     }, 5000);
 
     return () => clearInterval(interval);
-<<<<<<< HEAD
   }, [orderComplete, paymentReference, paymentStatus, pollCount, checkPaymentStatus]);
-=======
-  }, [orderComplete, paymentReference, paymentStatus, pollCount]);
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   if (orderComplete && orderId) {
     return (
@@ -1084,7 +1065,7 @@ export default function Checkout() {
                                         (Free over ${countryConfig.freeShippingThreshold})
                                       </span>
                                     )}
-                                    {" • "}
+                                    {" â€¢ "}
                                     Tax: {countryConfig.taxExempt
                                       ? "Exempt"
                                       : `${(countryConfig.taxRate * 100).toFixed(1)}%`}
@@ -1197,7 +1178,7 @@ export default function Checkout() {
                         <span className="font-bold text-lg">{formatPriceTZS(orderTotal)}</span>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        ≈ {formatPrice(orderTotal)} USD
+                        â‰ˆ {formatPrice(orderTotal)} USD
                       </p>
                     </div>
 
@@ -1281,11 +1262,7 @@ export default function Checkout() {
                           </p>
                         </div>
                         <p className="font-medium">
-<<<<<<< HEAD
                           {formatPrice(item.price * item.quantity)}
-=======
-                          {formatPrice(item.price * item.quantity, item.currency as Currency || 'USD')}
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
                         </p>
                       </div>
                     ))}
@@ -1351,7 +1328,7 @@ export default function Checkout() {
                         {formatPrice(orderTotal)}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        ≈ {formatPriceTZS(orderTotal)}
+                        â‰ˆ {formatPriceTZS(orderTotal)}
                       </span>
                     </div>
                   </div>
@@ -1368,7 +1345,7 @@ export default function Checkout() {
                     )}
                   {allProductsDigital && (
                     <p className="text-xs text-green-600 dark:text-green-400 text-center">
-                      ✓ Digital products are exempt from shipping and tax
+                      âœ“ Digital products are exempt from shipping and tax
                     </p>
                   )}
                   {selectedCountry && countryConfig && !allProductsDigital && (
@@ -1387,3 +1364,4 @@ export default function Checkout() {
     </div>
   );
 }
+

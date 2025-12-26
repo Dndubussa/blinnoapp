@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "./useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./use-toast";
@@ -28,11 +28,7 @@ export function usePushNotifications() {
       .eq("is_read", false);
 
     setUnreadCount(count || 0);
-<<<<<<< HEAD
   }, [user]);
-=======
-  }, [user?.id]);
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   useEffect(() => {
     if (!user) return;
@@ -78,11 +74,7 @@ export function usePushNotifications() {
     return () => {
       supabase.removeChannel(channel);
     };
-<<<<<<< HEAD
   }, [user, permission, fetchUnreadCount]);
-=======
-  }, [user?.id, permission, fetchUnreadCount]);
->>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   const requestPermission = useCallback(async () => {
     if (!isSupported) {
@@ -150,3 +142,4 @@ export function usePushNotifications() {
     refetchUnread: fetchUnreadCount,
   };
 }
+
