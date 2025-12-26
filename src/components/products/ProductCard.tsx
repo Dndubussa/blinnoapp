@@ -71,7 +71,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
       id: product.id,
       title: product.title,
       price: product.price,
-      currency: product.currency,
+      currency: product.currency || 'USD',
       image: getPrimaryImageSync(images),
       stock_quantity: product.stock_quantity,
       seller_id: product.seller_id,

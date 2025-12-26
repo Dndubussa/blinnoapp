@@ -13,7 +13,7 @@ import { VideoPreview } from "@/components/product-detail/VideoPreview";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Package } from "lucide-react";
-import { getAllProductImages } from "@/lib/imageUtils";
+import { getAllProductImagesSync } from "@/lib/imageUtils";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -113,7 +113,7 @@ export default function ProductDetail() {
           {/* Product Section */}
           <div className="grid gap-8 lg:grid-cols-2">
             <ImageGallery 
-              images={getAllProductImages(product)}
+              images={getAllProductImagesSync(product)}
               title={product.title} 
             />
             <ProductInfo product={product} />
