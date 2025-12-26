@@ -595,75 +595,44 @@ export default function Checkout() {
       const reference = `ORDER-${order.id.substring(0, 8).toUpperCase()}-${Date.now()}`;
 
       if (paymentMethod === "hosted_checkout") {
-        // Use ClickPesa API-generated hosted checkout link
-        const { data: checkoutResult, error: checkoutError } = await supabase.functions.invoke(
-          "clickpesa-payment",
-          {
-            body: {
-              action: "create-hosted-checkout",
-              amount: validatedOrderTotalTZS,
-              currency: "TZS",
-              reference: reference,
-              description: `Blinno Order Payment - ${validatedItems.length} item(s)`,
-              redirect_url: `${window.location.origin}/checkout/payment-callback`,
-              order_id: order.id,
-            },
-          }
-        );
-
-        if (checkoutError || !checkoutResult?.success) {
-          throw new Error(checkoutResult?.error || checkoutError?.message || "Failed to create checkout link");
+      // Use Mobile Money (USSD push via ClickPesa)
+      // Note: Hosted checkout is not currently supported
+      // Format phone number for ClickPesa (ensure it starts with 255)
+      let formattedPhone = paymentPhone.replace(/\D/g, "");
+      if (formattedPhone.startsWith("0")) {
+        formattedPhone = "255" + formattedPhone.substring(1);
+      } else if (!formattedPhone.startsWith("255")) {
+        formattedPhone = "255" + formattedPhone;
+      }
+    
+      // Initiate ClickPesa mobile money payment
+      // Use validated order total for payment
+      const { data: paymentResult, error: paymentError } = await supabase.functions.invoke(
+        "clickpesa-payment",
+        {
+          body: {
+            action: "initiate",
+            amount: validatedOrderTotalTZS, // Use validated total
+            currency: "TZS",
+            phone_number: formattedPhone,
+            network: selectedNetwork,
+            reference: reference,
+            description: `Blinno Order Payment - ${validatedItems.length} item(s)`,
+            order_id: order.id,
+          },
         }
-
-        const checkoutUrl = checkoutResult.checkout_url;
-        if (!checkoutUrl) {
-          throw new Error("No checkout URL returned from ClickPesa");
-        }
-
-        // Store order ID in localStorage for callback page
-        localStorage.setItem("checkout_order_id", order.id);
-        localStorage.setItem("checkout_reference", reference);
-        
-        console.log("Redirecting to ClickPesa hosted checkout:", checkoutUrl);
-        
-        // Redirect to ClickPesa hosted checkout page
-        window.location.href = checkoutUrl;
-        return; // Don't continue with the rest of the function
-      } else {
-        // Use Mobile Money (USSD push via ClickPesa)
-        // Format phone number for ClickPesa (ensure it starts with 255)
-        let formattedPhone = paymentPhone.replace(/\D/g, "");
-        if (formattedPhone.startsWith("0")) {
-          formattedPhone = "255" + formattedPhone.substring(1);
-        } else if (!formattedPhone.startsWith("255")) {
-          formattedPhone = "255" + formattedPhone;
-        }
-      
-        // Initiate ClickPesa mobile money payment
-        // Use validated order total for payment
-        const { data: paymentResult, error: paymentError } = await supabase.functions.invoke(
-          "clickpesa-payment",
-          {
-            body: {
-              action: "initiate",
-              amount: validatedOrderTotalTZS, // Use validated total
-              currency: "TZS",
-              phone_number: formattedPhone,
-              network: selectedNetwork,
-              reference: reference,
-              description: `Blinno Order Payment - ${validatedItems.length} item(s)`,
-              order_id: order.id,
-            },
-          }
-        );
+      );
       
         if (paymentError) {
           console.error("Payment initiation error:", paymentError);
-          throw new Error("Failed to initiate payment. Please try again.");
+          console.error("Payment error details:", paymentError.message);
+          throw new Error(paymentError.message || "Failed to initiate payment. Please try again.");
         }
       
         if (!paymentResult?.success) {
-          throw new Error(paymentResult?.error || "Payment initiation failed");
+          const errorMsg = paymentResult?.error || paymentResult?.message || "Payment initiation failed";
+          console.error("Payment result error:", errorMsg, paymentResult);
+          throw new Error(errorMsg);
         }
 
         // Store payment reference and transaction ID for status polling
@@ -702,7 +671,6 @@ export default function Checkout() {
         setOrderComplete(true);
         clearCart();
         toast.success("Order placed successfully! Complete the payment on your phone.");
-      }
     } catch (error: any) {
       console.error("Checkout error:", error);
       toast.error(error.message || "Failed to place order");
