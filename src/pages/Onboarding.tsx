@@ -379,7 +379,11 @@ export default function Onboarding() {
     becomeSeller,
     paymentStatus,
     paymentReference,
+<<<<<<< HEAD
     sellerSteps,
+=======
+    sellerSteps.length,
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
     completeOnboarding,
     navigate,
     toast,
@@ -446,7 +450,11 @@ export default function Onboarding() {
       // All steps completed - handle final completion
       await handleSellerComplete();
     }
+<<<<<<< HEAD
   }, [sellerStepIndex, sellerSteps, data, user, completeStep, toast, handleSellerComplete]);
+=======
+  }, [sellerStepIndex, sellerSteps.length, data, user, completeStep, toast, handleSellerComplete]);
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   const handleSellerBack = () => {
     if (sellerStepIndex > 0) {
@@ -558,7 +566,11 @@ export default function Onboarding() {
       });
       setIsProcessingPayment(false);
     }
+<<<<<<< HEAD
   }, [data.pricingModel, data.plan, user, completeStep, toast, handleSellerNext]);
+=======
+  }, [data.pricingModel, data.plan, user, completeStep, toast]);
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   const handlePayment = async () => {
     if (!data.phoneNumber) {

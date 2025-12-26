@@ -141,7 +141,11 @@ export default function BuyerMessages() {
       fetchMessages(selectedConversation.id);
       markMessagesAsRead(selectedConversation.id);
     }
+<<<<<<< HEAD
   }, [selectedConversation, fetchMessages, markMessagesAsRead]);
+=======
+  }, [selectedConversation?.id]);
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

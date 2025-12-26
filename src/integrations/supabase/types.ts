@@ -273,6 +273,10 @@ export type Database = {
           attributes: Json | null
           category: string
           created_at: string
+<<<<<<< HEAD
+=======
+          currency: string | null
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
           description: string | null
           id: string
           images: string[] | null
@@ -288,6 +292,10 @@ export type Database = {
           attributes?: Json | null
           category: string
           created_at?: string
+<<<<<<< HEAD
+=======
+          currency?: string | null
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
           description?: string | null
           id?: string
           images?: string[] | null
@@ -303,6 +311,10 @@ export type Database = {
           attributes?: Json | null
           category?: string
           created_at?: string
+<<<<<<< HEAD
+=======
+          currency?: string | null
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
           description?: string | null
           id?: string
           images?: string[] | null
@@ -324,6 +336,10 @@ export type Database = {
           city: string | null
           country: string | null
           created_at: string
+<<<<<<< HEAD
+=======
+          currency_preference: string | null
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
           email: string | null
           full_name: string | null
           id: string
@@ -337,6 +353,10 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string
+<<<<<<< HEAD
+=======
+          currency_preference?: string | null
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
           email?: string | null
           full_name?: string | null
           id: string
@@ -350,6 +370,10 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string
+<<<<<<< HEAD
+=======
+          currency_preference?: string | null
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
           email?: string | null
           full_name?: string | null
           id?: string
@@ -614,6 +638,13 @@ export type Database = {
           total_withdrawn: number
         }[]
       }
+<<<<<<< HEAD
+=======
+      get_seller_commission_rate: {
+        Args: { p_seller_id: string }
+        Returns: number
+      }
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -52,7 +52,11 @@ export function useOnboardingStatus() {
       lastUserIdRef.current = null;
       isInitialLoadRef.current = true;
     }
+<<<<<<< HEAD
   }, [user?.id, loadStatus]);
+=======
+  }, [user?.id]);
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   const completeStep = async (stepId: string, stepData?: Record<string, any>) => {
     if (!user) return false;
@@ -90,7 +94,11 @@ export function useOnboardingStatus() {
     if (user?.id) {
       loadStatus(user.id);
     }
+<<<<<<< HEAD
   }, [user?.id, loadStatus]);
+=======
+  }, [user?.id]);
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 
   return {
     status,

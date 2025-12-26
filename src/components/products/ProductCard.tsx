@@ -10,6 +10,11 @@ import type { ViewMode } from "@/pages/Products";
 import { Currency } from "@/lib/currency";
 import { getAllProductImagesSync, getPrimaryImageSync } from "@/lib/imageUtils";
 
+<<<<<<< HEAD
+=======
+import { Json } from "@/integrations/supabase/types";
+
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 interface Product {
   id: string;
   title: string;
@@ -20,6 +25,10 @@ interface Product {
   images: string[] | null;
   stock_quantity: number | null;
   seller_id: string;
+<<<<<<< HEAD
+=======
+  attributes: Json | null;
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
 }
 
 interface ProductCardProps {
@@ -43,7 +52,15 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   // Use image utilities to get all product images including category-specific covers
+<<<<<<< HEAD
   const images = getAllProductImagesSync(product);
+=======
+  const images = getAllProductImagesSync({
+    images: product.images,
+    category: product.category,
+    attributes: product.attributes as Record<string, any> || null,
+  });
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
   // Digital products don't have stock quantity (null)
   const hasStock = product.stock_quantity !== null;
   const isOutOfStock = hasStock && product.stock_quantity === 0;
@@ -69,7 +86,11 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
       id: product.id,
       title: product.title,
       price: product.price,
+<<<<<<< HEAD
       currency: product.currency,
+=======
+      currency: product.currency || 'USD',
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
       image: getPrimaryImageSync(images),
       stock_quantity: product.stock_quantity,
       seller_id: product.seller_id,
@@ -163,7 +184,11 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           </div>
           <div className="mt-3 flex items-center justify-between">
             <span className="text-lg font-bold text-primary">
+<<<<<<< HEAD
               {formatPrice(product.price, (product.currency || 'USD') as Currency)}
+=======
+              {formatPrice(product.price, product.currency as Currency || 'USD')}
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
             </span>
             <div className="flex gap-2">
               <Button size="sm" variant="outline" asChild>
@@ -260,7 +285,11 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           </Link>
           <div className="mt-4 flex items-center justify-between">
             <span className="text-lg font-bold text-primary">
+<<<<<<< HEAD
               {formatPrice(product.price, (product.currency || 'USD') as Currency)}
+=======
+              {formatPrice(product.price, product.currency as Currency || 'USD')}
+>>>>>>> f3f544e74e17c1fe64355e187595c7dc171392d6
             </span>
             <Button size="sm" disabled={isOutOfStock} onClick={handleAddToCart}>
               <ShoppingCart className="h-4 w-4" />

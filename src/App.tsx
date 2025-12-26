@@ -78,6 +78,7 @@ const BuyerNotifications = lazy(() => import("./pages/buyer/Notifications"));
 const BuyerSettings = lazy(() => import("./pages/buyer/Settings"));
 const DigitalLibrary = lazy(() => import("./pages/buyer/DigitalLibrary"));
 const BuyerMessages = lazy(() => import("./pages/buyer/Messages"));
+
 // Configure React Query to prevent unnecessary refetches on tab switch
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -155,7 +156,6 @@ const App = () => (
                       <Route path="/search" element={<SearchPage />} />
                       <Route path="/category/:category" element={<CategoryPage />} />
                       <Route path="/seller/:sellerId" element={<SellerStorefront />} />
-                      
                       {/* Buyer Dashboard Routes - Code-split for performance */}
                       <Route path="/buyer" element={<Suspense fallback={<PageLoader />}><BuyerDashboard /></Suspense>}>
                         <Route index element={<Suspense fallback={<PageLoader />}><BuyerOverview /></Suspense>} />
@@ -167,7 +167,6 @@ const App = () => (
                         <Route path="notifications" element={<Suspense fallback={<PageLoader />}><BuyerNotifications /></Suspense>} />
                         <Route path="settings" element={<Suspense fallback={<PageLoader />}><BuyerSettings /></Suspense>} />
                       </Route>
-
                       {/* Seller Dashboard Routes - Code-split for performance */}
                       <Route path="/seller" element={<Suspense fallback={<PageLoader />}><SellerDashboard /></Suspense>}>
                         <Route index element={<Suspense fallback={<PageLoader />}><Overview /></Suspense>} />
@@ -178,7 +177,6 @@ const App = () => (
                         <Route path="analytics" element={<Suspense fallback={<PageLoader />}><Analytics /></Suspense>} />
                         <Route path="settings" element={<Suspense fallback={<PageLoader />}><Settings /></Suspense>} />
                       </Route>
-
                       {/* Admin Dashboard Routes - Code-split for performance */}
                       <Route path="/admin" element={<Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>}>
                         <Route index element={<Suspense fallback={<PageLoader />}><AdminOverview /></Suspense>} />
@@ -191,7 +189,6 @@ const App = () => (
                         <Route path="security" element={<Suspense fallback={<PageLoader />}><AdminSecurity /></Suspense>} />
                         <Route path="settings" element={<Suspense fallback={<PageLoader />}><AdminSettings /></Suspense>} />
                       </Route>
-                      
                       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                       <Route path="*" element={<NotFound />} />
                     </Routes>
