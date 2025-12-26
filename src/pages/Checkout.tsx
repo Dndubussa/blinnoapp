@@ -594,9 +594,7 @@ export default function Checkout() {
       // Generate payment reference
       const reference = `ORDER-${order.id.substring(0, 8).toUpperCase()}-${Date.now()}`;
 
-      if (paymentMethod === "hosted_checkout") {
       // Use Mobile Money (USSD push via ClickPesa)
-      // Note: Hosted checkout is not currently supported
       // Format phone number for ClickPesa (ensure it starts with 255)
       let formattedPhone = paymentPhone.replace(/\D/g, "");
       if (formattedPhone.startsWith("0")) {
@@ -623,54 +621,54 @@ export default function Checkout() {
         }
       );
       
-        if (paymentError) {
-          console.error("Payment initiation error:", paymentError);
-          console.error("Payment error details:", paymentError.message);
-          throw new Error(paymentError.message || "Failed to initiate payment. Please try again.");
-        }
+      if (paymentError) {
+        console.error("Payment initiation error:", paymentError);
+        console.error("Payment error details:", paymentError.message);
+        throw new Error(paymentError.message || "Failed to initiate payment. Please try again.");
+      }
       
-        if (!paymentResult?.success) {
-          const errorMsg = paymentResult?.error || paymentResult?.message || "Payment initiation failed";
-          console.error("Payment result error:", errorMsg, paymentResult);
-          throw new Error(errorMsg);
-        }
+      if (!paymentResult?.success) {
+        const errorMsg = paymentResult?.error || paymentResult?.message || "Payment initiation failed";
+        console.error("Payment result error:", errorMsg, paymentResult);
+        throw new Error(errorMsg);
+      }
 
-        // Store payment reference and transaction ID for status polling
-        setPaymentReference(reference);
-        
-        // Store transaction ID from Flutterwave response if available
-        const transactionId = paymentResult?.data?.transaction_id || paymentResult?.data?.reference || null;
-        if (transactionId) {
-          // Store in a ref or state for status checking
-          // The backend will look it up by reference, but we can also use transaction_id directly
-        }
+      // Store payment reference and transaction ID for status polling
+      setPaymentReference(reference);
+      
+      // Store transaction ID from Flutterwave response if available
+      const transactionId = paymentResult?.data?.transaction_id || paymentResult?.data?.reference || null;
+      if (transactionId) {
+        // Store in a ref or state for status checking
+        // The backend will look it up by reference, but we can also use transaction_id directly
+      }
 
-        // Show USSD push notification
-        toast.success(
-          `A USSD prompt has been sent to ${formattedPhone}. Please enter your PIN to complete the payment.`,
-          { duration: 10000 }
-        );
+      // Show USSD push notification
+      toast.success(
+        `A USSD prompt has been sent to ${formattedPhone}. Please enter your PIN to complete the payment.`,
+        { duration: 10000 }
+      );
 
-        // Send order confirmation email
-        await supabase.functions.invoke("order-confirmation", {
-          body: {
-            orderId: order.id,
-            email: shippingData.email,
-            customerName: shippingData.fullName,
-            items: items.map((item) => ({
-              title: item.title,
-              quantity: item.quantity,
-              price: item.price,
-            })),
-            total: orderTotal,
-            shippingAddress: shippingData,
-          },
-        });
+      // Send order confirmation email
+      await supabase.functions.invoke("order-confirmation", {
+        body: {
+          orderId: order.id,
+          email: shippingData.email,
+          customerName: shippingData.fullName,
+          items: items.map((item) => ({
+            title: item.title,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          total: orderTotal,
+          shippingAddress: shippingData,
+        },
+      });
 
-        setOrderId(order.id);
-        setOrderComplete(true);
-        clearCart();
-        toast.success("Order placed successfully! Complete the payment on your phone.");
+      setOrderId(order.id);
+      setOrderComplete(true);
+      clearCart();
+      toast.success("Order placed successfully! Complete the payment on your phone.");
     } catch (error: any) {
       console.error("Checkout error:", error);
       toast.error(error.message || "Failed to place order");
