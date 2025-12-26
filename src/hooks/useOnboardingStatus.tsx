@@ -52,7 +52,7 @@ export function useOnboardingStatus() {
       lastUserIdRef.current = null;
       isInitialLoadRef.current = true;
     }
-  }, [user?.id, loadStatus]);
+  }, [user?.id]);
 
   const completeStep = async (stepId: string, stepData?: Record<string, any>) => {
     if (!user) return false;
