@@ -54,7 +54,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     };
 
     loadCurrencyPreference();
-  }, [user, profile]);
+  }, [user?.id, profile?.currency_preference]);
 
   const setUserCurrency = useCallback(async (currency: Currency) => {
     if (!SUPPORTED_CURRENCIES.includes(currency)) {
@@ -85,7 +85,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     } else {
       console.log('Currency changed for anonymous user (not saved)');
     }
-  }, [user, profile]);
+  }, [user?.id]);
 
   const formatPrice = useCallback((price: number, productCurrency: Currency = 'USD'): string => {
     return formatPriceWithConversion(price, productCurrency, userCurrency);
