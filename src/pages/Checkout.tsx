@@ -398,7 +398,7 @@ export default function Checkout() {
             currency: "TZS",
             reference: reference,
             description: `Blinno Order Payment - ${validatedItems.length} item(s)`,
-            redirect_url: `${window.location.origin}/checkout/payment-callback`,
+            return_url: `${window.location.origin}/checkout/success?order_id=${order.id}&reference=${reference}`,
             order_id: order.id,
           },
         }
@@ -414,7 +414,7 @@ export default function Checkout() {
             currency: "TZS",
             reference: reference,
             description: `Blinno Order Payment - ${validatedItems.length} item(s)`,
-            redirect_url: `${window.location.origin}/checkout/payment-callback`,
+            return_url: `${window.location.origin}/checkout/success?order_id=${order.id}&reference=${reference}`,
             order_id: order.id,
           }
         });
