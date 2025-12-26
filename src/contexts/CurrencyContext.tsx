@@ -27,8 +27,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        if (profile?.currency_preference) {
-          const currency = profile.currency_preference as Currency;
+        if ((profile as any)?.currency_preference) {
+          const currency = (profile as any).currency_preference as Currency;
           if (SUPPORTED_CURRENCIES.includes(currency)) {
             setUserCurrencyState(currency);
             setIsLoading(false);
@@ -39,7 +39,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         const detected = detectUserCurrency();
         setUserCurrencyState(detected);
 
-        if (user && !profile?.currency_preference) {
+        if (user && !(profile as any)?.currency_preference) {
           await supabase
             .from('profiles')
             .update({ currency_preference: detected })
@@ -62,7 +62,6 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    console.log('Currency changed from', userCurrency, 'to', currency);
     setUserCurrencyState(currency);
 
     if (user) {
@@ -74,8 +73,8 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
         if (error) {
           console.error('Error updating currency preference:', error);
-          if (profile?.currency_preference) {
-            setUserCurrencyState(profile.currency_preference as Currency);
+          if ((profile as any)?.currency_preference) {
+            setUserCurrencyState((profile as any).currency_preference as Currency);
           }
         } else {
           console.log('Currency preference saved to profile');
@@ -86,7 +85,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     } else {
       console.log('Currency changed for anonymous user (not saved)');
     }
-  }, [user, profile, userCurrency]);
+  }, [user, profile]);
 
   const formatPrice = useCallback((price: number, productCurrency: Currency = 'USD'): string => {
     return formatPriceWithConversion(price, productCurrency, userCurrency);
