@@ -1,8 +1,14 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
+Disallow: /admin
+Disallow: /api/
+Crawl-delay: 1
 
 User-agent: Twitterbot
 Allow: /
@@ -10,8 +16,33 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: LinkedInBot
 Allow: /
 
-# Sitemap location
+User-agent: WhatsApp
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+# Disallow private/temporary pages
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /onboarding-payment-callback
+Disallow: /checkout-payment-callback
+Disallow: /subscription-payment-callback
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap location - Critical for Google to discover pages
 Sitemap: https://www.blinno.app/sitemap.xml

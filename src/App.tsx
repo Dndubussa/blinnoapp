@@ -11,6 +11,7 @@ import { SavedSearchesProvider } from "@/hooks/useSavedSearches";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SEOSchema } from "@/components/SEOSchema";
 import { PageLoader } from "@/lib/lazyPages.tsx";
 
 // Eagerly loaded pages (critical path - home, auth, product detail)
@@ -111,6 +112,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <SEOSchema />
         <BrowserRouter
           future={{
             v7_startTransition: true,
