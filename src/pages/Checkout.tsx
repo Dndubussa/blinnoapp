@@ -897,16 +897,20 @@ export default function Checkout() {
 
           {/* Progress Steps */}
           <div className="mb-8 flex items-center justify-center gap-4">
-            <div className={`flex items-center gap-2 ${paymentStep === "shipping" ? "text-primary" : "text-muted-foreground"}`}>
-              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${paymentStep === "shipping" ? "bg-primary text-primary-foreground" : "bg-green-500 text-white"}`}>
-                {paymentStep !== "shipping" ? <Check className="h-4 w-4" /> : "1"}
+            <div className={`flex items-center gap-2 ${paymentStep === "shipping" || paymentStep === "processing" ? "text-primary" : "text-muted-foreground"}`}>
+              <div className={`flex h-8 w-8 items-center justify-center rounded-full ${paymentStep !== "shipping" && paymentStep !== "processing" ? "bg-green-500 text-white" : "bg-primary text-primary-foreground"}`}>
+                {paymentStep !== "shipping" && paymentStep !== "processing" ? <Check className="h-4 w-4" /> : "1"}
               </div>
               <span className="hidden sm:inline font-medium">Shipping</span>
             </div>
             <div className="h-px w-8 bg-border" />
             <div className={`flex items-center gap-2 ${paymentStep === "payment" || paymentStep === "processing" ? "text-primary" : "text-muted-foreground"}`}>
               <div className={`flex h-8 w-8 items-center justify-center rounded-full ${paymentStep === "payment" || paymentStep === "processing" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
-                2
+                {paymentStep === "processing" ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  "2"
+                )}
               </div>
               <span className="hidden sm:inline font-medium">Payment</span>
             </div>
@@ -1112,9 +1116,16 @@ export default function Checkout() {
                           type="submit"
                           size="lg"
                           className="w-full"
-                          disabled={!user}
+                          disabled={!user || isProcessing}
                         >
-                          Continue to Payment
+                          {isProcessing ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Processing Order...
+                            </>
+                          ) : (
+                            "Continue to Payment"
+                          )}
                         </Button>
                       </form>
                     </Form>
@@ -1310,7 +1321,7 @@ export default function Checkout() {
                         {isProcessing ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Processing...
+                            {paymentMethod === "hosted_checkout" ? "Preparing Payment..." : "Initiating Payment..."}
                           </>
                         ) : (
                           <>
