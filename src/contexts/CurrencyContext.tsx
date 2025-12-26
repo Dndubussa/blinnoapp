@@ -1,98 +1,57 @@
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { Currency, formatPriceWithConversion, detectUserCurrency, SUPPORTED_CURRENCIES } from '@/lib/currency';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { Currency, detectUserCurrency, SUPPORTED_CURRENCIES } from '@/lib/currency';
 
 interface CurrencyContextType {
   userCurrency: Currency;
-  setUserCurrency: (currency: Currency) => Promise<void>;
-  formatPrice: (price: number, productCurrency?: Currency) => string;
+  setUserCurrency: (currency: Currency) => void;
   isLoading: boolean;
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
 
+const CURRENCY_STORAGE_KEY = 'blinno-currency';
+
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const { user, profile } = useAuth();
   const [userCurrency, setUserCurrencyState] = useState<Currency>('USD');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadCurrencyPreference = async () => {
-      if (!user) {
-        const detected = detectUserCurrency();
-        setUserCurrencyState(detected);
-        setIsLoading(false);
-        return;
-      }
-
+    const loadCurrency = () => {
       try {
-        if ((profile as any)?.currency_preference) {
-          const currency = (profile as any).currency_preference as Currency;
-          if (SUPPORTED_CURRENCIES.includes(currency)) {
-            setUserCurrencyState(currency);
-            setIsLoading(false);
-            return;
-          }
-        }
-
-        const detected = detectUserCurrency();
-        setUserCurrencyState(detected);
-
-        if (user && !(profile as any)?.currency_preference) {
-          await supabase
-            .from('profiles')
-            .update({ currency_preference: detected })
-            .eq('id', user.id);
+        const saved = localStorage.getItem(CURRENCY_STORAGE_KEY);
+        if (saved && SUPPORTED_CURRENCIES.includes(saved as Currency)) {
+          setUserCurrencyState(saved as Currency);
+        } else {
+          const detected = detectUserCurrency();
+          setUserCurrencyState(detected);
+          localStorage.setItem(CURRENCY_STORAGE_KEY, detected);
         }
       } catch (error) {
-        console.error('Error loading currency preference:', error);
+        console.error('Error loading currency:', error);
         setUserCurrencyState('USD');
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadCurrencyPreference();
-  }, [user?.id, profile?.currency_preference]);
+    loadCurrency();
+  }, []);
 
-  const setUserCurrency = useCallback(async (currency: Currency) => {
+  const setUserCurrency = (currency: Currency) => {
     if (!SUPPORTED_CURRENCIES.includes(currency)) {
       console.error('Unsupported currency:', currency);
       return;
     }
-
     setUserCurrencyState(currency);
-
-    if (user) {
-      try {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ currency_preference: currency })
-          .eq('id', user.id);
-
-        if (error) {
-          console.error('Error updating currency preference:', error);
-          if ((profile as any)?.currency_preference) {
-            setUserCurrencyState((profile as any).currency_preference as Currency);
-          }
-        } else {
-          console.log('Currency preference saved to profile');
-        }
-      } catch (error) {
-        console.error('Error updating currency preference:', error);
-      }
-    } else {
-      console.log('Currency changed for anonymous user (not saved)');
+    try {
+      localStorage.setItem(CURRENCY_STORAGE_KEY, currency);
+    } catch (error) {
+      console.error('Error saving currency:', error);
     }
-  }, [user?.id]);
-
-  const formatPrice = useCallback((price: number, productCurrency: Currency = 'USD'): string => {
-    return formatPriceWithConversion(price, productCurrency, userCurrency);
-  }, [userCurrency]);
+  };
 
   return (
-    <CurrencyContext.Provider value={{ userCurrency, setUserCurrency, formatPrice, isLoading }}>
+    <CurrencyContext.Provider value={{ userCurrency, setUserCurrency, isLoading }}>
       {children}
     </CurrencyContext.Provider>
   );
