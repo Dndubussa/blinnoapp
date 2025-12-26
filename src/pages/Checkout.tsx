@@ -321,10 +321,14 @@ export default function Checkout() {
 
       // Get seller countries
       const sellerIdsForValidation = [...new Set(validatedItems.map((item) => item.validatedSellerId))];
-      const { data: sellerProfilesForValidation } = await supabase
-        .from("profiles")
-        .select("id, country")
-        .in("id", sellerIdsForValidation);
+      let sellerProfilesForValidation = null;
+      if (sellerIdsForValidation.length > 0) {
+        const result = await supabase
+          .from("profiles")
+          .select("id, country")
+          .in("id", sellerIdsForValidation);
+        sellerProfilesForValidation = result.data;
+      }
 
       const sellerCountryForValidation = sellerProfilesForValidation && sellerProfilesForValidation.length > 0
         ? sellerProfilesForValidation[0].country
@@ -523,10 +527,14 @@ export default function Checkout() {
 
       // Get seller countries for same-country exemption
       const sellerIdsForValidation = [...new Set(validatedItems.map((item) => item.validatedSellerId))];
-      const { data: sellerProfilesForValidation } = await supabase
-        .from("profiles")
-        .select("id, country")
-        .in("id", sellerIdsForValidation);
+      let sellerProfilesForValidation = null;
+      if (sellerIdsForValidation.length > 0) {
+        const result = await supabase
+          .from("profiles")
+          .select("id, country")
+          .in("id", sellerIdsForValidation);
+        sellerProfilesForValidation = result.data;
+      }
 
       const sellerCountryForValidation = sellerProfilesForValidation && sellerProfilesForValidation.length > 0
         ? sellerProfilesForValidation[0].country // Use first seller's country for mixed carts
