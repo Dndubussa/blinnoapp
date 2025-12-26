@@ -1,0 +1,46 @@
+{
+  "name": "Blinno - The Everything Marketplace",
+  "short_name": "Blinno",
+  "description": "One platform to sell, create, and grow your business. From products to courses, Blinno empowers everyone.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#1a1a1a",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["shopping", "productivity"],
+  "screenshots": [
+    {
+      "src": "/favicon.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
