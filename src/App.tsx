@@ -43,6 +43,7 @@ import ProductsPage from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
 import Wishlist from "./pages/Wishlist";
 import OrderTracking from "./pages/OrderTracking";
 import SearchPage from "./pages/Search";
@@ -153,6 +154,7 @@ const App = () => (
                       <Route path="/product/:id" element={<ProductDetail />} />
                       <Route path="/profile" element={<Profile />} />
                       <Route path="/checkout" element={<Checkout />} />
+                      <Route path="/checkout/success" element={<CheckoutSuccess />} />
                       <Route path="/wishlist" element={<Wishlist />} />
                       <Route path="/order/:orderId" element={<OrderTracking />} />
                       <Route path="/search" element={<SearchPage />} />
