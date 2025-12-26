@@ -558,7 +558,7 @@ export default function Onboarding() {
       });
       setIsProcessingPayment(false);
     }
-  }, [data.pricingModel, data.plan, user, completeStep, toast, handleSellerNext]);
+  }, [data.pricingModel, data.plan, user, completeStep, toast]);
 
   const handlePayment = async () => {
     if (!data.phoneNumber) {
