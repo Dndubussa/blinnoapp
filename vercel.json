@@ -3,7 +3,23 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/(?!manifest\\.json|robots\\.txt|sitemap\\.xml|favicon|assets|_next)(?!.*\\.)(.+)",
+      "source": "/manifest.json",
+      "destination": "/manifest.json"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ],
