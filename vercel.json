@@ -3,11 +3,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/manifest.json",
-      "destination": "/manifest.json"
-    },
-    {
-      "source": "/([^.]+(?:/[^.]+)*)$",
+      "source": "/(?!.*\\.)(.*)",
       "destination": "/index.html"
     }
   ],
