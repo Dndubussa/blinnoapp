@@ -379,7 +379,7 @@ export default function Onboarding() {
     becomeSeller,
     paymentStatus,
     paymentReference,
-    sellerSteps,
+    sellerSteps.length,
     completeOnboarding,
     navigate,
     toast,
@@ -446,7 +446,7 @@ export default function Onboarding() {
       // All steps completed - handle final completion
       await handleSellerComplete();
     }
-  }, [sellerStepIndex, sellerSteps, data, user, completeStep, toast, handleSellerComplete]);
+  }, [sellerStepIndex, sellerSteps.length, data, user, completeStep, toast, handleSellerComplete]);
 
   const handleSellerBack = () => {
     if (sellerStepIndex > 0) {

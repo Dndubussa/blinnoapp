@@ -90,7 +90,7 @@ export function useOnboardingStatus() {
     if (user?.id) {
       loadStatus(user.id);
     }
-  }, [user?.id, loadStatus]);
+  }, [user?.id]);
 
   return {
     status,
