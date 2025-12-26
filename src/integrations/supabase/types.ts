@@ -273,6 +273,7 @@ export type Database = {
           attributes: Json | null
           category: string
           created_at: string
+          currency: string | null
           description: string | null
           id: string
           images: string[] | null
@@ -288,6 +289,7 @@ export type Database = {
           attributes?: Json | null
           category: string
           created_at?: string
+          currency?: string | null
           description?: string | null
           id?: string
           images?: string[] | null
@@ -303,6 +305,7 @@ export type Database = {
           attributes?: Json | null
           category?: string
           created_at?: string
+          currency?: string | null
           description?: string | null
           id?: string
           images?: string[] | null
@@ -324,6 +327,7 @@ export type Database = {
           city: string | null
           country: string | null
           created_at: string
+          currency_preference: string | null
           email: string | null
           full_name: string | null
           id: string
@@ -337,6 +341,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string
+          currency_preference?: string | null
           email?: string | null
           full_name?: string | null
           id: string
@@ -350,6 +355,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string
+          currency_preference?: string | null
           email?: string | null
           full_name?: string | null
           id?: string

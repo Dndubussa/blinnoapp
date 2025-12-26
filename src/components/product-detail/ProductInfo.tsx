@@ -72,6 +72,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         id: product.id,
         title: product.title,
         price: product.price,
+        currency: product.currency || 'USD',
         image: product.images?.[0] || null,
         stock_quantity: product.stock_quantity,
         seller_id: product.seller_id,
@@ -88,7 +89,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         id: product.id,
         title: product.title,
         price: product.price,
-
+        currency: product.currency || 'USD',
         image: product.images?.[0] || null,
         category: product.category,
         seller_id: product.seller_id,
@@ -135,7 +136,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Price */}
       <div className="mt-4 flex items-baseline gap-2">
         <span className="text-3xl font-bold text-primary">
-          {formatPrice(product.price, 'USD')}
+          {formatPrice(product.price, product.currency as Currency || 'USD')}
         </span>
       </div>
 

@@ -266,7 +266,7 @@ export default function Checkout() {
       const productIds = items.map((item) => item.id);
       const { data: products, error: productsError } = await supabase
         .from("products")
-        .select("id, price, stock_quantity, is_active, seller_id, title, category")
+        .select("id, price, currency, stock_quantity, is_active, seller_id, title, category")
         .in("id", productIds);
 
       if (productsError) {
@@ -301,7 +301,7 @@ export default function Checkout() {
         return {
           ...cartItem,
           validatedPrice: product.price,
-          validatedCurrency: 'USD' as Currency,
+          validatedCurrency: (product.currency as Currency) || 'USD',
           validatedSellerId: product.seller_id,
           validatedCategory: product.category,
         };
@@ -466,7 +466,7 @@ export default function Checkout() {
       const productIds = items.map((item) => item.id);
       const { data: products, error: productsError } = await supabase
         .from("products")
-        .select("id, price, stock_quantity, is_active, seller_id, title, category")
+        .select("id, price, currency, stock_quantity, is_active, seller_id, title, category")
         .in("id", productIds);
 
       if (productsError) {
@@ -503,7 +503,7 @@ export default function Checkout() {
         return {
           ...cartItem,
           validatedPrice: product.price, // Use database price, not client price
-          validatedCurrency: 'USD' as Currency, // Include currency
+          validatedCurrency: (product.currency as Currency) || 'USD', // Include currency
           validatedSellerId: product.seller_id,
           validatedCategory: product.category, // Include category for exemption calculation
         };
@@ -1262,7 +1262,7 @@ export default function Checkout() {
                           </p>
                         </div>
                         <p className="font-medium">
-                          {formatPrice(item.price * item.quantity)}
+                          {formatPrice(item.price * item.quantity, item.currency as Currency || 'USD')}
                         </p>
                       </div>
                     ))}

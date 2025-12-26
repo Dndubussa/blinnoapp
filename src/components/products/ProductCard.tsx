@@ -76,7 +76,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
       id: product.id,
       title: product.title,
       price: product.price,
-
+      currency: product.currency || 'USD',
       image: getPrimaryImageSync(images),
       stock_quantity: product.stock_quantity,
       seller_id: product.seller_id,
@@ -170,7 +170,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           </div>
           <div className="mt-3 flex items-center justify-between">
             <span className="text-lg font-bold text-primary">
-              {formatPrice(product.price, 'USD')}
+              {formatPrice(product.price, product.currency as Currency || 'USD')}
             </span>
             <div className="flex gap-2">
               <Button size="sm" variant="outline" asChild>
@@ -267,7 +267,7 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           </Link>
           <div className="mt-4 flex items-center justify-between">
             <span className="text-lg font-bold text-primary">
-              {formatPrice(product.price, 'USD')}
+              {formatPrice(product.price, product.currency as Currency || 'USD')}
             </span>
             <Button size="sm" disabled={isOutOfStock} onClick={handleAddToCart}>
               <ShoppingCart className="h-4 w-4" />
