@@ -28,7 +28,7 @@ export function usePushNotifications() {
       .eq("is_read", false);
 
     setUnreadCount(count || 0);
-  }, [user]);
+  }, [user?.id]);
 
   useEffect(() => {
     if (!user) return;
@@ -74,7 +74,7 @@ export function usePushNotifications() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, permission, fetchUnreadCount]);
+  }, [user?.id, permission, fetchUnreadCount]);
 
   const requestPermission = useCallback(async () => {
     if (!isSupported) {
