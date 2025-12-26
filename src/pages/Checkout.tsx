@@ -719,8 +719,6 @@ export default function Checkout() {
 
   // Payment status polling
   const checkPaymentStatus = useCallback(async () => {
-    if (!paymentReference || !orderId || paymentStatus !== "pending") return;
-
     try {
       // Use reference only - backend will look up transaction_id from database
       const { data, error } = await supabase.functions.invoke("clickpesa-payment", {
@@ -745,7 +743,7 @@ export default function Checkout() {
     } catch (error) {
       console.error("Error checking payment status:", error);
     }
-  }, [paymentReference, orderId, paymentStatus]);
+  }, [paymentReference]);
 
   // Poll for payment status every 5 seconds, up to 24 times (2 minutes)
   useEffect(() => {
@@ -759,7 +757,7 @@ export default function Checkout() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [orderComplete, paymentReference, paymentStatus, pollCount, checkPaymentStatus]);
+  }, [orderComplete, paymentReference, paymentStatus, pollCount]);
 
   if (orderComplete && orderId) {
     return (
