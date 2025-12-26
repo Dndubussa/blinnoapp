@@ -4,13 +4,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html",
-      "has": [
-        {
-          "type": "file",
-          "value": false
-        }
-      ]
+      "destination": "/index.html"
     }
   ],
   "headers": [
