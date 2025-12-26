@@ -1,12 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Menu, X, User, LogOut, Store, ShoppingBag, Shield, Heart, Search, Globe } from "lucide-react";
+import { Menu, X, User, LogOut, Store, ShoppingBag, Shield, Heart, Search, Globe, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { CartButton } from "@/components/cart/CartButton";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCurrencyContext } from "@/contexts/CurrencyContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { SUPPORTED_CURRENCIES, CURRENCY_INFO, type Currency } from "@/lib/currency";
 import {
   DropdownMenu,
@@ -32,6 +33,7 @@ export function Navbar() {
   const { user, profile, signOut, hasRole, loading } = useAuth();
   const { totalItems: wishlistItems } = useWishlist();
   const { userCurrency, setUserCurrency } = useCurrencyContext();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -54,7 +56,7 @@ export function Navbar() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm dark:bg-card/95"
     >
       <nav className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
         <Link to="/" className="flex items-center gap-2">
@@ -92,6 +94,36 @@ export function Navbar() {
           >
             <Search className="h-5 w-5" />
           </Button>
+
+          {/* Theme Toggle */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                {theme === "light" ? (
+                  <Sun className="h-5 w-5" />
+                ) : theme === "dark" ? (
+                  <Moon className="h-5 w-5" />
+                ) : (
+                  <Sun className="h-5 w-5" />
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")} className={theme === "light" ? "bg-accent" : ""}>
+                <Sun className="mr-2 h-4 w-4" />
+                <span>Light</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")} className={theme === "dark" ? "bg-accent" : ""}>
+                <Moon className="mr-2 h-4 w-4" />
+                <span>Dark</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setTheme("system")} className={theme === "system" ? "bg-accent" : ""}>
+                <Globe className="mr-2 h-4 w-4" />
+                <span>System</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           
           {/* Currency Selector */}
           <DropdownMenu>

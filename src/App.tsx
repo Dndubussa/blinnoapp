@@ -9,6 +9,7 @@ import { CartProvider } from "@/hooks/useCart";
 import { WishlistProvider } from "@/hooks/useWishlist";
 import { SavedSearchesProvider } from "@/hooks/useSavedSearches";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SEOSchema } from "@/components/SEOSchema";
@@ -110,23 +111,24 @@ const queryClient = new QueryClient({
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <SEOSchema />
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <AuthProvider>
-            <CurrencyProvider>
-              <CartProvider>
-                <WishlistProvider>
-                  <SavedSearchesProvider>
-                    <CartDrawer />
-                    <Routes>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <SEOSchema />
+          <BrowserRouter
+            future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true,
+            }}
+          >
+            <AuthProvider>
+              <CurrencyProvider>
+                <CartProvider>
+                  <WishlistProvider>
+                    <SavedSearchesProvider>
+                      <CartDrawer />
+                      <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/auth" element={<Auth />} />
                       <Route path="/sign-in" element={<SignIn />} />
@@ -202,7 +204,8 @@ const App = () => (
             </CurrencyProvider>
           </AuthProvider>
         </BrowserRouter>
-      </TooltipProvider>
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   </ErrorBoundary>
 );
