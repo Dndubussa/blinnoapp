@@ -70,7 +70,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {
         id: product.id,
         title: product.title,
-        price: product.price,
+        price: typeof product.price === 'string' ? parseFloat(product.price) : (product.price || 0),
         currency: product.currency || 'USD',
         quantity,
       }

@@ -32,7 +32,7 @@ export default function Wishlist() {
     addToCart({
       id: item.id,
       title: item.title,
-      price: item.price,
+      price: typeof item.price === 'string' ? parseFloat(item.price) : (item.price || 0),
       image: item.image,
       stock_quantity: item.stock_quantity,
       seller_id: item.seller_id,

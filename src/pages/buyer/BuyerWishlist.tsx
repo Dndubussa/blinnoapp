@@ -59,7 +59,7 @@ export default function BuyerWishlist() {
                       addToCart({
                         id: product.id,
                         title: product.title,
-                        price: product.price,
+                        price: typeof product.price === 'string' ? parseFloat(product.price) : (product.price || 0),
 
                         image: product.image,
                         seller_id: product.seller_id,
