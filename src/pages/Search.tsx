@@ -100,9 +100,11 @@ export default function SearchPage() {
         if (!matchesSearch) return false;
       }
 
-      // Category filter
+      // Category filter (case-insensitive)
       if (selectedCategories.length > 0) {
-        if (!selectedCategories.includes(product.category.toLowerCase())) {
+        if (!selectedCategories.some(
+          (cat) => cat.toLowerCase() === product.category.toLowerCase()
+        )) {
           return false;
         }
       }

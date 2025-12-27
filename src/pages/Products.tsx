@@ -77,9 +77,13 @@ export default function ProductsPage() {
       );
     }
 
-    // Category filter
+    // Category filter (case-insensitive)
     if (selectedCategories.length > 0) {
-      filtered = filtered.filter((p) => selectedCategories.includes(p.category));
+      filtered = filtered.filter((p) =>
+        selectedCategories.some(
+          (cat) => cat.toLowerCase() === p.category.toLowerCase()
+        )
+      );
     }
 
     // Sort
