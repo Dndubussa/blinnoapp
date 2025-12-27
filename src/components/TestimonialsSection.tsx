@@ -82,7 +82,7 @@ export function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative rounded-2xl border border-border bg-white p-6 shadow-sm"
+              className="relative rounded-2xl border border-border bg-card dark:bg-slate-800 p-6 shadow-sm"
             >
               <Quote className="absolute right-6 top-6 h-8 w-8 text-primary/10" />
               

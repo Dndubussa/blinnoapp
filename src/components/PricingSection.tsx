@@ -143,11 +143,11 @@ export function PricingSection() {
         >
           <Tabs value={pricingModel} onValueChange={(v) => setPricingModel(v as "subscription" | "percentage")} className="w-full max-w-md">
             <TabsList className="grid w-full grid-cols-2 bg-muted">
-              <TabsTrigger value="subscription" className="gap-2 data-[state=active]:bg-white data-[state=active]:text-foreground">
+              <TabsTrigger value="subscription" className="gap-2 data-[state=active]:bg-card dark:data-[state=active]:bg-slate-800 data-[state=active]:text-foreground">
                 <CreditCard className="h-4 w-4" />
                 Subscription
               </TabsTrigger>
-              <TabsTrigger value="percentage" className="gap-2 data-[state=active]:bg-white data-[state=active]:text-foreground">
+              <TabsTrigger value="percentage" className="gap-2 data-[state=active]:bg-card dark:data-[state=active]:bg-slate-800 data-[state=active]:text-foreground">
                 <Percent className="h-4 w-4" />
                 Per Sale
               </TabsTrigger>
@@ -165,8 +165,8 @@ export function PricingSection() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className={`relative rounded-xl border ${
                 plan.popular 
-                  ? "border-primary bg-white shadow-lg" 
-                  : "border-border bg-white shadow-sm"
+                  ? "border-primary bg-card dark:bg-slate-800 shadow-lg" 
+                  : "border-border bg-card dark:bg-slate-800 shadow-sm"
               } p-6`}
             >
               {plan.popular && (

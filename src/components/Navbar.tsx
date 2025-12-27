@@ -56,7 +56,7 @@ export function Navbar() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-white/95 backdrop-blur-sm dark:bg-card/95"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 dark:bg-slate-950/95 backdrop-blur-sm"
     >
       <nav className="container mx-auto flex h-16 items-center justify-between px-4 lg:px-8">
         <Link to="/" className="flex items-center gap-2">
@@ -249,7 +249,7 @@ export function Navbar() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="border-t border-border bg-white md:hidden"
+          className="border-t border-border bg-background dark:bg-slate-950 md:hidden"
         >
           <div className="container flex flex-col gap-4 px-4 py-6">
             {navLinks.map((link) =>

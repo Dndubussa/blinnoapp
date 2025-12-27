@@ -11,9 +11,15 @@ export function HeroSection() {
     <section className="relative overflow-hidden bg-background pt-32 pb-24 lg:pt-40 lg:pb-32">
       {/* Subtle gradient background */}
       <div 
-        className="absolute inset-0"
+        className="absolute inset-0 dark:hidden"
         style={{
           background: "linear-gradient(180deg, hsl(210 40% 98%) 0%, hsl(0 0% 100%) 50%, hsl(210 40% 98%) 100%)",
+        }}
+      />
+      <div 
+        className="absolute inset-0 hidden dark:block"
+        style={{
+          background: "linear-gradient(180deg, hsl(210 40% 15%) 0%, hsl(0 0% 10%) 50%, hsl(210 40% 15%) 100%)",
         }}
       />
 

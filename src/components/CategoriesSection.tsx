@@ -75,7 +75,7 @@ const itemVariants = {
 
 export function CategoriesSection() {
   return (
-    <section id="products" className="relative bg-white py-24 lg:py-32">
+    <section id="products" className="relative bg-background dark:bg-slate-900/50 py-24 lg:py-32">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -108,7 +108,7 @@ export function CategoriesSection() {
             <motion.div
               key={category.id}
               variants={itemVariants}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card dark:bg-slate-800 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
               <div
                 className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${category.gradient}`}

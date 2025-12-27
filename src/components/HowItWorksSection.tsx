@@ -66,7 +66,7 @@ export function HowItWorksSection() {
                 <div className="absolute right-0 top-12 hidden h-0.5 w-full translate-x-1/2 bg-gradient-to-r from-primary/30 to-transparent lg:block" />
               )}
               
-              <div className="relative rounded-2xl border border-border bg-white p-6 shadow-sm">
+              <div className="relative rounded-2xl border border-border bg-card dark:bg-slate-800 p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
                     <item.icon className="h-6 w-6 text-primary" />
