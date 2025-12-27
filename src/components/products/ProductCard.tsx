@@ -10,6 +10,7 @@ import type { ViewMode } from "@/pages/Products";
 import { Currency } from "@/lib/currency";
 import { getAllProductImagesSync, getPrimaryImageSync } from "@/lib/imageUtils";
 import { CompactAudioPreview } from "@/components/product-detail/CompactAudioPreview";
+import { ProductRating } from "@/components/product-detail/ProductRating";
 
 
 interface Product {
@@ -165,7 +166,14 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
               onClick={(e) => e.stopPropagation()}
             >
               Visit Store â†’
-            </Link>            {/* Audio Preview for Music Products */}
+            </Link>
+            
+            {/* Product Rating */}
+            <div className="mt-2">
+              <ProductRating productId={product.id} showCount={true} size="sm" />
+            </div>
+
+            {/* Audio Preview for Music Products */}
             {product.category === "Music" && product.attributes?.previewFile && (
               <div className="mt-2">
                 <CompactAudioPreview
@@ -271,8 +279,15 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
             className="mt-1 inline-block text-xs text-primary hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
-            Visit Store â†’
-          </Link>          {/* Audio Preview for Music Products */}
+            Visit Store →
+          </Link>
+
+          {/* Product Rating */}
+          <div className="mt-2">
+            <ProductRating productId={product.id} showCount={true} size="sm" />
+          </div>
+
+          {/* Audio Preview for Music Products */}
           {product.category === "Music" && product.attributes?.previewFile && (
             <div className="mt-2">
               <CompactAudioPreview
@@ -282,7 +297,9 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
                 className="text-xs"
               />
             </div>
-          )}          <div className="mt-4 flex items-center justify-between">
+          )}
+
+          <div className="mt-4 flex items-center justify-between">
             <span className="text-lg font-bold text-primary">
               {formatPrice(product.price, (product.currency || 'USD') as Currency)}
             </span>
