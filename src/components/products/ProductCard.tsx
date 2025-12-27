@@ -150,18 +150,23 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
         {/* Content */}
         <div className="flex flex-1 flex-col justify-between">
           <div>
-            <div className="flex items-start justify-between gap-2">
-              <Link to={`/product/${product.id}`} className="font-semibold line-clamp-1 hover:text-primary">
+            {/* Title and Badges */}
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <Link to={`/product/${product.id}`} className="font-bold text-sm line-clamp-2 hover:text-primary flex-1">
                 {product.title}
               </Link>
-              <div className="flex gap-2">
-                <Badge variant="outline" className={getCategoryColor(product.category)}>
-                  {product.category}
-                </Badge>
-                <StockBadge stockQuantity={product.stock_quantity} variant="compact" />
-              </div>
+              <Badge variant="outline" className={getCategoryColor(product.category)}>
+                {product.category}
+              </Badge>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+
+            {/* Stock Badge */}
+            <div className="mb-2">
+              <StockBadge stockQuantity={product.stock_quantity} variant="compact" />
+            </div>
+
+            {/* Description */}
+            <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
               {product.description || "No description available"}
             </p>
             <Link
@@ -187,9 +192,12 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
                   className="text-xs"
                 />
               </div>
-            )}          </div>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-lg font-bold text-primary">
+            )}
+          </div>
+
+          {/* Price and Actions */}
+          <div className="mt-3 pt-3 border-t border-border/50 flex items-center justify-between gap-2">
+            <span className="text-xl font-bold text-primary">
               {formatPrice(product.price, (product.currency || 'USD') as Currency)}
             </span>
             <div className="flex gap-2">
@@ -236,11 +244,6 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           >
             {product.category}
           </Badge>
-
-          {/* Stock Badge */}
-          <div className="absolute right-3 top-3">
-            <StockBadge stockQuantity={product.stock_quantity} variant="compact" />
-          </div>
           
           {/* Image Navigation */}
           {hasMultipleImages && (
@@ -278,27 +281,34 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-4">
-          <h3 className="font-semibold line-clamp-1 text-foreground">{product.title}</h3>
-          <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
+        <div className="p-4 flex flex-col h-full">
+          {/* Title - Larger and more prominent */}
+          <h3 className="font-bold text-base line-clamp-2 text-foreground leading-snug">
+            {product.title}
+          </h3>
+
+          {/* Description */}
+          <p className="mt-2 text-xs text-muted-foreground line-clamp-2">
             {product.description || "No description available"}
           </p>
-          <Link
-            to={`/seller/${product.seller_id}`}
-            className="mt-1 inline-block text-xs text-primary hover:underline"
-            onClick={(e) => e.stopPropagation()}
-          >
-            Visit Store →
-          </Link>
 
-          {/* Product Rating */}
-          <div className="mt-2">
-            <ProductRating productId={product.id} showCount={true} size="sm" />
+          {/* Rating and Seller */}
+          <div className="mt-3 space-y-2">
+            <div>
+              <ProductRating productId={product.id} showCount={true} size="sm" />
+            </div>
+            <Link
+              to={`/seller/${product.seller_id}`}
+              className="text-xs text-primary hover:underline inline-block"
+              onClick={(e) => e.stopPropagation()}
+            >
+              Visit Store →
+            </Link>
           </div>
 
           {/* Audio Preview for Music Products */}
           {product.category === "Music" && product.attributes?.previewFile && (
-            <div className="mt-2">
+            <div className="mt-3">
               <CompactAudioPreview
                 previewUrl={product.attributes.previewFile}
                 artist={product.attributes.artist}
@@ -308,12 +318,15 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
             </div>
           )}
 
-          <div className="mt-4 flex items-center justify-between">
-            <span className="text-lg font-bold text-primary">
-              {formatPrice(product.price, (product.currency || 'USD') as Currency)}
-            </span>
-            <Button size="sm" disabled={isOutOfStock} onClick={handleAddToCart}>
-              <ShoppingCart className="h-4 w-4" />
+          {/* Price and Action - Separated by flex-1 */}
+          <div className="mt-auto pt-3 border-t border-border/50 flex items-end justify-between gap-2">
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold text-primary">
+                {formatPrice(product.price, (product.currency || 'USD') as Currency)}
+              </span>
+            </div>
+            <Button size="default" disabled={isOutOfStock} onClick={handleAddToCart} className="h-10 w-10 p-0">
+              <ShoppingCart className="h-5 w-5" />
             </Button>
           </div>
         </div>
