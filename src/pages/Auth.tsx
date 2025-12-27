@@ -389,7 +389,7 @@ export default function Auth() {
                   <div className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white dark:bg-slate-900 px-2 text-muted-foreground">Or continue with email</span>
+                  <span className="bg-card dark:bg-slate-800 px-2 text-muted-foreground">Or continue with email</span>
                 </div>
               </div>
             </>
@@ -598,7 +598,7 @@ export default function Auth() {
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm your password"
-                    className="pl-10 pr-10 bg-white dark:bg-slate-800"
+                    className="pl-10 pr-10 bg-card dark:bg-slate-800"
                     {...signUpForm.register("confirmPassword")}
                   />
                   <button
@@ -707,7 +707,7 @@ export default function Auth() {
                     id="email"
                     type="email"
                     placeholder="Enter your email address"
-                    className="pl-10 bg-white dark:bg-slate-800"
+                    className="pl-10 bg-card dark:bg-slate-800"
                     {...signInForm.register("email")}
                   />
                 </div>

@@ -54,7 +54,7 @@ export default function ProductDetail() {
 
   if (productLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-slate-950">
+      <div className="min-h-screen bg-background dark:bg-slate-950">
         <Navbar />
         <main className="pt-20">
           <div className="container mx-auto px-4 py-8 lg:px-8">
@@ -76,7 +76,7 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-white dark:bg-slate-950">
+      <div className="min-h-screen bg-background dark:bg-slate-950">
         <Navbar />
         <main className="flex min-h-[60vh] items-center justify-center pt-20">
           <div className="text-center">
@@ -97,7 +97,7 @@ export default function ProductDetail() {
 
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950">
+    <div className="min-h-screen bg-background dark:bg-slate-950">
       <Navbar />
       <main className="pt-20">
         <div className="container mx-auto px-4 py-8 lg:px-8">

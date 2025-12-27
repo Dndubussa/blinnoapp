@@ -218,7 +218,7 @@ export default function SignUp() {
               <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-muted-foreground">Or continue with email</span>
+              <span className="bg-card dark:bg-slate-800 px-2 text-muted-foreground">Or continue with email</span>
             </div>
           </div>
 
@@ -371,7 +371,7 @@ export default function SignUp() {
                   id="email"
                   type="email"
                   placeholder="Enter your email address"
-                  className="pl-10 bg-white"
+                  className="pl-10 bg-card dark:bg-slate-800"
                   {...signUpForm.register("email")}
                 />
               </div>
@@ -419,7 +419,7 @@ export default function SignUp() {
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
-                  className="pl-10 pr-10 bg-white"
+                  className="pl-10 pr-10 bg-card dark:bg-slate-800"
                   {...signUpForm.register("confirmPassword")}
                 />
                 <button
