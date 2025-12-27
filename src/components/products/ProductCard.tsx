@@ -9,6 +9,7 @@ import { useCurrencyContext } from "@/contexts/CurrencyContext";
 import type { ViewMode } from "@/pages/Products";
 import { Currency } from "@/lib/currency";
 import { getAllProductImagesSync, getPrimaryImageSync } from "@/lib/imageUtils";
+import { CompactAudioPreview } from "@/components/product-detail/CompactAudioPreview";
 
 
 interface Product {
@@ -21,7 +22,10 @@ interface Product {
   images: string[] | null;
   stock_quantity: number | null;
   seller_id: string;
-
+  attributes?: {
+    previewFile?: string;
+    artist?: string;
+  };
 }
 
 interface ProductCardProps {
@@ -161,8 +165,17 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
               onClick={(e) => e.stopPropagation()}
             >
               Visit Store â†’
-            </Link>
-          </div>
+            </Link>            {/* Audio Preview for Music Products */}
+            {product.category === "Music" && product.attributes?.previewFile && (
+              <div className="mt-2">
+                <CompactAudioPreview
+                  previewUrl={product.attributes.previewFile}
+                  artist={product.attributes.artist}
+                  title={product.title}
+                  className="text-xs"
+                />
+              </div>
+            )}          </div>
           <div className="mt-3 flex items-center justify-between">
             <span className="text-lg font-bold text-primary">
               {formatPrice(product.price, (product.currency || 'USD') as Currency)}
@@ -259,8 +272,17 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
             onClick={(e) => e.stopPropagation()}
           >
             Visit Store â†’
-          </Link>
-          <div className="mt-4 flex items-center justify-between">
+          </Link>          {/* Audio Preview for Music Products */}
+          {product.category === "Music" && product.attributes?.previewFile && (
+            <div className="mt-2">
+              <CompactAudioPreview
+                previewUrl={product.attributes.previewFile}
+                artist={product.attributes.artist}
+                title={product.title}
+                className="text-xs"
+              />
+            </div>
+          )}          <div className="mt-4 flex items-center justify-between">
             <span className="text-lg font-bold text-primary">
               {formatPrice(product.price, (product.currency || 'USD') as Currency)}
             </span>
