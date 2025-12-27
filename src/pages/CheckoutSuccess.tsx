@@ -127,7 +127,7 @@ export default function CheckoutSuccess() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
       
       <div className="flex-1">

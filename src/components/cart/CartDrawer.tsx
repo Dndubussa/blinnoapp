@@ -29,7 +29,7 @@ export function CartDrawer() {
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
-      <SheetContent className="flex w-full flex-col sm:max-w-lg bg-white">
+      <SheetContent className="flex w-full flex-col sm:max-w-lg bg-card dark:bg-slate-900">
         <SheetHeader className="space-y-2.5 pr-6">
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
@@ -157,7 +157,7 @@ export function CartDrawer() {
                 <span className="text-sm text-muted-foreground">
                   Subtotal ({totalItems} items)
                 </span>
-                <span className="text-lg font-bold">{formatPrice(totalPrice)}</span>
+                <span className="text-lg font-bold">{formatPrice(totalPrice, 'USD')}</span>
               </div>
 
               <div className="flex flex-col gap-2">
