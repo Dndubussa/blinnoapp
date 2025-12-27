@@ -11,6 +11,7 @@ import { Currency } from "@/lib/currency";
 import { getAllProductImagesSync, getPrimaryImageSync } from "@/lib/imageUtils";
 import { CompactAudioPreview } from "@/components/product-detail/CompactAudioPreview";
 import { ProductRating } from "@/components/product-detail/ProductRating";
+import { StockBadge } from "@/components/product-detail/StockBadge";
 
 
 interface Product {
@@ -153,9 +154,12 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
               <Link to={`/product/${product.id}`} className="font-semibold line-clamp-1 hover:text-primary">
                 {product.title}
               </Link>
-              <Badge variant="outline" className={getCategoryColor(product.category)}>
-                {product.category}
-              </Badge>
+              <div className="flex gap-2">
+                <Badge variant="outline" className={getCategoryColor(product.category)}>
+                  {product.category}
+                </Badge>
+                <StockBadge stockQuantity={product.stock_quantity} variant="compact" />
+              </div>
             </div>
             <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
               {product.description || "No description available"}
@@ -232,6 +236,11 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
           >
             {product.category}
           </Badge>
+
+          {/* Stock Badge */}
+          <div className="absolute right-3 top-3">
+            <StockBadge stockQuantity={product.stock_quantity} variant="compact" />
+          </div>
           
           {/* Image Navigation */}
           {hasMultipleImages && (
