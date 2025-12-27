@@ -218,7 +218,7 @@ export default function Settings() {
                             onChange={(e) =>
                               setFormData({ ...formData, city: e.target.value })
                             }
-                            placeholder="Your city"
+                            placeholder="Enter your city"
                           />
                         </div>
 
@@ -230,7 +230,7 @@ export default function Settings() {
                             onChange={(e) =>
                               setFormData({ ...formData, state: e.target.value })
                             }
-                            placeholder="Your state or region"
+                            placeholder="Enter your state or region"
                           />
                         </div>
                       </div>
@@ -243,7 +243,7 @@ export default function Settings() {
                           onChange={(e) =>
                             setFormData({ ...formData, address: e.target.value })
                           }
-                          placeholder="Street address (optional)"
+                          placeholder="Enter your street address (optional)"
                         />
                         <p className="text-xs text-muted-foreground">
                           Optional: Provide your address for more precise location-based calculations.

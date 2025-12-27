@@ -352,7 +352,7 @@ export default function SignUp() {
                 <Input
                   id="fullName"
                   placeholder="Enter your full name"
-                  className="pl-10 bg-white"
+                  className="pl-10 bg-background dark:bg-slate-800"
                   {...signUpForm.register("fullName")}
                 />
               </div>

@@ -953,7 +953,7 @@ export default function Checkout() {
                               <FormItem>
                                 <FormLabel>Full Name</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="John Doe" {...field} />
+                                  <Input placeholder="Enter your full name" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -968,7 +968,7 @@ export default function Checkout() {
                                 <FormControl>
                                   <Input
                                     type="email"
-                                    placeholder="john@example.com"
+                                    placeholder="Enter your email address"
                                     {...field}
                                   />
                                 </FormControl>
@@ -985,7 +985,7 @@ export default function Checkout() {
                             <FormItem>
                               <FormLabel>Phone Number</FormLabel>
                               <FormControl>
-                                <Input placeholder="+255 712 345 678" {...field} />
+                                <Input placeholder="Enter your phone number" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1000,7 +1000,7 @@ export default function Checkout() {
                               <FormLabel>Street Address</FormLabel>
                               <FormControl>
                                 <Input
-                                  placeholder="123 Main Street, Apt 4B"
+                                  placeholder="Enter your street address"
                                   {...field}
                                 />
                               </FormControl>
@@ -1017,7 +1017,7 @@ export default function Checkout() {
                               <FormItem>
                                 <FormLabel>City</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Dar es Salaam" {...field} />
+                                  <Input placeholder="Enter your city" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -1030,7 +1030,7 @@ export default function Checkout() {
                               <FormItem>
                                 <FormLabel>Region</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Dar es Salaam" {...field} />
+                                  <Input placeholder="Enter your region" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -1046,7 +1046,7 @@ export default function Checkout() {
                               <FormItem>
                                 <FormLabel>Postal Code</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="00000" {...field} />
+                                  <Input placeholder="Enter postal code" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -1268,7 +1268,7 @@ export default function Checkout() {
                           <Input
                             id="payment-phone"
                             type="tel"
-                            placeholder="0712 345 678"
+                            placeholder="Enter your mobile money number"
                             value={paymentPhone}
                             onChange={(e) => setPaymentPhone(e.target.value)}
                             disabled={isProcessing}

@@ -275,7 +275,7 @@ export default function SignIn() {
                     id="resetEmail"
                     type="email"
                     placeholder="Enter your email address"
-                    className="pl-10 bg-white"
+                    className="pl-10 bg-background dark:bg-slate-800"
                     {...forgotPasswordForm.register("email")}
                   />
                 </div>
@@ -309,7 +309,7 @@ export default function SignIn() {
                     id="email"
                     type="email"
                     placeholder="Enter your email address"
-                    className="pl-10 bg-white"
+                    className="pl-10 bg-background dark:bg-slate-800"
                     {...signInForm.register("email")}
                   />
                 </div>
@@ -337,7 +337,7 @@ export default function SignIn() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    className="pl-10 pr-10 bg-white"
+                    className="pl-10 pr-10 bg-background dark:bg-slate-800"
                     {...signInForm.register("password")}
                   />
                   <button

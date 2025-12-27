@@ -84,7 +84,7 @@ const NewsletterSignup = () => {
               placeholder="Your name (optional)"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-white border-border text-foreground"
+              className="bg-background dark:bg-slate-800 border-border text-foreground"
             />
             <Input
               type="email"
@@ -92,7 +92,7 @@ const NewsletterSignup = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-white border-border text-foreground"
+              className="bg-background dark:bg-slate-800 border-border text-foreground"
             />
           </div>
           <Button 

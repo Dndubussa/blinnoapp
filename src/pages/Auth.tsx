@@ -548,7 +548,7 @@ export default function Auth() {
                     id="email"
                     type="email"
                     placeholder="Enter your email address"
-                    className="pl-10 bg-white dark:bg-slate-800"
+                    className="pl-10 bg-background dark:bg-slate-800"
                     {...signUpForm.register("email")}
                   />
                 </div>
@@ -566,8 +566,8 @@ export default function Auth() {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Create a password"
-                    className="pl-10 pr-10 bg-white dark:bg-slate-800"
+                    placeholder="Create a strong password"
+                    className="pl-10 pr-10 bg-background dark:bg-slate-800"
                     {...signUpForm.register("password")}
                   />
                   <button
@@ -673,7 +673,7 @@ export default function Auth() {
                     id="resetEmail"
                     type="email"
                     placeholder="Enter your email address"
-                    className="pl-10 bg-white dark:bg-slate-800"
+                    className="pl-10 bg-background dark:bg-slate-800"
                     {...forgotPasswordForm.register("email")}
                   />
                 </div>

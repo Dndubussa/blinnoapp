@@ -899,7 +899,7 @@ export default function AdminAnalytics() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@example.com"
+                    placeholder="Enter email address"
                     value={scheduleEmail}
                     onChange={(e) => setScheduleEmail(e.target.value)}
                   />

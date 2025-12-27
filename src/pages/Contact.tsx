@@ -84,19 +84,19 @@ export default function Contact() {
                 <form className="space-y-4">
                   <div>
                     <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Your name" />
+                    <Input id="name" placeholder="Enter your full name" />
                   </div>
                   <div>
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="your.email@example.com" />
+                    <Input id="email" type="email" placeholder="Enter your email address" />
                   </div>
                   <div>
                     <Label htmlFor="subject">Subject</Label>
-                    <Input id="subject" placeholder="What is this regarding?" />
+                    <Input id="subject" placeholder="What is this inquiry about?" />
                   </div>
                   <div>
                     <Label htmlFor="message">Message</Label>
-                    <Textarea id="message" placeholder="Your message..." rows={5} />
+                    <Textarea id="message" placeholder="Please describe your inquiry in detail..." rows={5} />
                   </div>
                   <Button type="submit" className="w-full">Send Message</Button>
                 </form>

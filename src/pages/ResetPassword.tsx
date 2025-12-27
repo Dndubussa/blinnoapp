@@ -144,8 +144,8 @@ export default function ResetPassword() {
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Create a new password"
-                      className="pl-10 pr-10 bg-white dark:bg-slate-800"
+                      placeholder="Create a strong new password"
+                      className="pl-10 pr-10 bg-background dark:bg-slate-800"
                       {...form.register("password")}
                     />
                     <button
@@ -175,7 +175,7 @@ export default function ResetPassword() {
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm your new password"
-                      className="pl-10 pr-10 bg-white dark:bg-slate-800"
+                      className="pl-10 pr-10 bg-background dark:bg-slate-800"
                       {...form.register("confirmPassword")}
                     />
                     <button

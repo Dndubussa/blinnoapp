@@ -185,7 +185,7 @@ export function Footer() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="h-10 rounded-lg border border-input bg-white px-4 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary"
+              className="h-10 rounded-lg border border-input bg-background dark:bg-slate-800 px-4 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary"
             />
             <button className="h-10 rounded-lg bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-primary/90">
               Subscribe
