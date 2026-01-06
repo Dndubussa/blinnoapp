@@ -1,0 +1,66 @@
+PRODUCT VISIBILITY TROUBLESHOOTING GUIDE
+=========================================
+
+PROBLEM: Products don't show on /products or marketplace pages
+
+STEP-BY-STEP FIX:
+-----------------
+
+1. DIAGNOSE (Check browser console):
+   - Open /products page
+   - Press F12 to open DevTools
+   - Go to Console tab
+   - Look for these messages:
+     🔍 Fetching products from database...
+     ✅ Products fetched: X products
+     ⚠️ No products found in database with is_active=true
+
+2. CHECK DATABASE:
+   Run: diagnose-visibility.sql
+   
+   Look for:
+   - How many products have is_active = true?
+   - Do products exist at all?
+   - Are there RLS policy issues?
+
+3. FIX THE ISSUE:
+   Run: fix-product-visibility.sql
+   
+   This will:
+   ✅ Set all products to is_active = true
+   ✅ Fix NULL/empty required fields
+   ✅ Set default prices for zero-price products
+   ✅ Check RLS policies
+
+4. IF STILL NOT WORKING:
+   The issue is likely RLS (Row Level Security)
+   
+   Run Step 5 from fix-product-visibility.sql:
+   - Uncomment the policy code at the bottom
+   - Run it separately in SQL Editor
+   - This ensures anonymous users can read products
+
+5. VERIFY:
+   - Clear browser cache (Ctrl + Shift + R)
+   - Open incognito/private window
+   - Go to /products page
+   - Products should now be visible!
+
+COMMON CAUSES:
+--------------
+❌ is_active = false (products hidden)
+❌ is_active = NULL (default value issue)
+❌ RLS policy blocking anonymous users
+❌ Price = 0 causing display issues
+❌ Missing required fields (title, category, currency)
+
+QUICK CHECK QUERIES:
+--------------------
+-- Count active products
+SELECT COUNT(*) FROM products WHERE is_active = true;
+
+-- Show sample products
+SELECT id, title, is_active, price, currency FROM products LIMIT 5;
+
+-- Check RLS policies
+SELECT * FROM pg_policies WHERE tablename = 'products';
