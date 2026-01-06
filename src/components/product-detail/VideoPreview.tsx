@@ -1,18 +1,74 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Play, Pause, Volume2, VolumeX, Maximize } from "lucide-react";
+import { getPreviewUrl } from "@/lib/previewUtils";
 
 interface VideoPreviewProps {
   previewUrl: string;
   title?: string;
   thumbnail?: string;
+  previewStartTime?: number; // Start time in seconds (default: 0)
+  maxDuration?: number; // Maximum preview duration in seconds (default: 30)
 }
 
-export function VideoPreview({ previewUrl, title, thumbnail }: VideoPreviewProps) {
+export function VideoPreview({ 
+  previewUrl, 
+  title, 
+  thumbnail,
+  previewStartTime = 0,
+  maxDuration = 30
+}: VideoPreviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [accessiblePreviewUrl, setAccessiblePreviewUrl] = useState<string | null>(null);
+
+  // Get accessible preview URL (handles private bucket signed URLs)
+  useEffect(() => {
+    getPreviewUrl(previewUrl).then((url) => {
+      setAccessiblePreviewUrl(url);
+    });
+  }, [previewUrl]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => {
+      const time = video.currentTime;
+      setCurrentTime(time);
+      
+      // Auto-pause at max duration from preview start
+      if (time >= previewStartTime + maxDuration) {
+        video.pause();
+        setIsPlaying(false);
+        video.currentTime = previewStartTime; // Reset to preview start
+      }
+    };
+
+    const handleLoadedMetadata = () => {
+      // Set initial position to preview start
+      video.currentTime = previewStartTime;
+      setCurrentTime(previewStartTime);
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      video.currentTime = previewStartTime; // Reset to preview start
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("ended", handleEnded);
+
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("ended", handleEnded);
+    };
+  }, [previewStartTime, maxDuration]);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -20,10 +76,15 @@ export function VideoPreview({ previewUrl, title, thumbnail }: VideoPreviewProps
 
     if (isPlaying) {
       video.pause();
+      setIsPlaying(false);
     } else {
+      // Ensure we start from preview start time
+      if (video.currentTime < previewStartTime || video.currentTime > previewStartTime + maxDuration) {
+        video.currentTime = previewStartTime;
+      }
       video.play();
+      setIsPlaying(true);
     }
-    setIsPlaying(!isPlaying);
   };
 
   const toggleMute = () => {
@@ -49,12 +110,22 @@ export function VideoPreview({ previewUrl, title, thumbnail }: VideoPreviewProps
     togglePlay();
   };
 
+  if (!accessiblePreviewUrl) {
+    return (
+      <Card className="overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200 dark:border-blue-800">
+        <div className="relative aspect-video bg-black flex items-center justify-center">
+          <div className="text-white">Loading preview...</div>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card className="overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200 dark:border-blue-800">
       <div className="relative aspect-video bg-black">
         <video
           ref={videoRef}
-          src={previewUrl}
+          src={accessiblePreviewUrl}
           poster={thumbnail}
           className="w-full h-full cursor-pointer"
           onClick={handleVideoClick}
@@ -62,6 +133,7 @@ export function VideoPreview({ previewUrl, title, thumbnail }: VideoPreviewProps
           onPause={() => setIsPlaying(false)}
           controls={false}
           playsInline
+          preload="metadata"
         />
 
         {/* Play Overlay */}

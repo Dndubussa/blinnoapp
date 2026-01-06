@@ -586,6 +586,7 @@ export default function Products() {
                           attributes={attributes}
                           onChange={setAttributes}
                           userId={user.id}
+                          productId={editingProduct?.id}
                         />
                       </div>
                     )}

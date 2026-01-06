@@ -126,6 +126,8 @@ export default function ProductDetail() {
                 previewUrl={product.attributes.previewFile || product.attributes.audioFile}
                 artist={product.attributes.artist}
                 title={product.attributes.musicTitle || product.title}
+                previewStartTime={product.attributes.previewStartTime || 0}
+                maxDuration={30}
               />
             </div>
           )}
@@ -136,6 +138,8 @@ export default function ProductDetail() {
                 previewUrl={product.attributes.previewVideo || product.attributes.videoFile}
                 title={product.attributes.musicTitle || product.title}
                 thumbnail={product.attributes.albumCover}
+                previewStartTime={product.attributes.previewStartTime || 0}
+                maxDuration={30}
               />
             </div>
           )}
@@ -146,6 +150,8 @@ export default function ProductDetail() {
                 previewUrl={product.attributes.previewVideo}
                 title={product.attributes.courseTitle || product.title}
                 thumbnail={product.attributes.thumbnail}
+                previewStartTime={product.attributes.previewStartTime || 0}
+                maxDuration={30}
               />
             </div>
           )}

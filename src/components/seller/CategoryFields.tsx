@@ -16,12 +16,14 @@ import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@/components/ui/progress";
 import { normalizeImageUrlSync } from "@/lib/imageUtils";
 import CoverArtUpload from "@/components/seller/CoverArtUpload";
+import { PreviewSegmentSelector } from "@/components/seller/PreviewSegmentSelector";
 
 interface CategoryFieldsProps {
   category: string;
   attributes: Record<string, any>;
   onChange: (attributes: Record<string, any>) => void;
   userId: string;
+  productId?: string; // Optional product ID for saving preview config
 }
 
 const clothesSizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
@@ -29,7 +31,7 @@ const shoeSizes = ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "
 const colors = ["Black", "White", "Red", "Blue", "Green", "Yellow", "Pink", "Purple", "Orange", "Brown", "Gray", "Navy"];
 const materials = ["Cotton", "Polyester", "Silk", "Wool", "Linen", "Leather", "Denim", "Nylon"];
 
-export default function CategoryFields({ category, attributes, onChange, userId }: CategoryFieldsProps) {
+export default function CategoryFields({ category, attributes, onChange, userId, productId }: CategoryFieldsProps) {
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
@@ -753,27 +755,24 @@ export default function CategoryFields({ category, attributes, onChange, userId 
           <p className="text-xs text-muted-foreground">Upload music video (formats: MP4, WebM, MOV, AVI)</p>
         </div>
 
-        {/* Preview Audio */}
-        <div className="space-y-2">
-          <Label>Preview Audio (Optional)</Label>
-          {attributes.previewFile ? (
-            <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
-              <FileAudio className="h-5 w-5 text-muted-foreground" />
-              <span className="text-sm flex-1 truncate">Preview uploaded</span>
-              <Button type="button" size="icon" variant="ghost" onClick={() => removeFile("previewFile")}>
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
-            <Input
-              type="file"
-              accept=".mp3,.wav"
-              onChange={(e) => handleFileUpload(e, "previewFile")}
+        {/* Preview Segment Selector */}
+        {(attributes.audioFile || attributes.videoFile) && (
+          <div className="space-y-2 mt-4">
+            <Label>Preview Configuration</Label>
+            <PreviewSegmentSelector
+              sourceFileUrl={attributes.audioFile || attributes.videoFile || null}
+              sourceType={attributes.audioFile ? "audio" : "video"}
+              previewStartTime={attributes.previewStartTime || 0}
+              onPreviewStartTimeChange={(time) => updateAttribute("previewStartTime", time)}
+              onPreviewGenerated={(previewUrl) => updateAttribute("previewFile", previewUrl)}
+              productId={productId}
               disabled={uploading}
             />
-          )}
-          <p className="text-xs text-muted-foreground">Short preview clip (30-60 seconds) for potential buyers</p>
-        </div>
+            <p className="text-xs text-muted-foreground">
+              Select a 30-second segment from your {attributes.audioFile ? "audio" : "video"} file to use as preview
+            </p>
+          </div>
+        )}
       </div>
     );
   }
