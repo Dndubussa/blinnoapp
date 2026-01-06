@@ -88,14 +88,24 @@ async function getAuthToken(): Promise<string> {
   }
 
   const data = await response.json();
-  console.log("[DEBUG] ClickPesa auth response:", { success: data.success, hasToken: !!data.token });
+  console.log("[DEBUG] ClickPesa auth response:", JSON.stringify(data, null, 2));
   
-  if (!data.success || !data.token) {
-    console.error("[ERROR] Invalid ClickPesa auth response:", data);
-    throw new Error("Invalid response from ClickPesa auth");
+  // Try multiple possible token field names
+  const token = data.token || data.access_token || data.accessToken || data.data?.token || data.data?.access_token;
+  
+  if (!token) {
+    console.error("[ERROR] Invalid ClickPesa auth response - no token found:", JSON.stringify(data, null, 2));
+    throw new Error("No access token received from ClickPesa");
   }
 
-  cachedToken = data.token;
+  // Check if response indicates success (some APIs use different success indicators)
+  const isSuccess = data.success !== false && (data.success === true || data.status === "success" || response.status === 200);
+  if (!isSuccess) {
+    console.error("[ERROR] ClickPesa auth response indicates failure:", JSON.stringify(data, null, 2));
+    throw new Error(`ClickPesa authentication failed: ${data.message || data.error || "Unknown error"}`);
+  }
+
+  cachedToken = token;
   tokenExpiry = now + 3600000; // Token valid for 1 hour
 
   console.log("ClickPesa auth token generated successfully");
@@ -682,7 +692,8 @@ serve(async (req) => {
           const clickpesaToken = await getAuthToken();
           console.log("[DEBUG] Auth token obtained successfully");
           
-          const checkoutPayload = {
+          // Call createHostedCheckout to get the checkout URL
+          const result = await createHostedCheckout(clickpesaToken, {
             amount: amount,
             currency: payload.currency || "TZS",
             reference: String(payload.reference).trim(),
@@ -692,6 +703,9 @@ serve(async (req) => {
             checksum_secret: Deno.env.get("CLICKPESA_CHECKSUM_SECRET"),
             customer_email: payload.customer_email || "",
             customer_phone: payload.customer_phone || "",
+          });
+
+          console.log("[DEBUG] Hosted checkout created successfully:", JSON.stringify(result, null, 2));
           
           // Store the transaction in the database (non-blocking)
           try {
@@ -706,7 +720,7 @@ serve(async (req) => {
                 network: null, // Not applicable for hosted checkout
                 phone_number: null, // Collected by ClickPesa
                 reference: payload.reference,
-                clickpesa_reference: result.checkout_id || result.reference || null,
+                clickpesa_reference: result.checkout_id || result.reference || result.transaction_id || null,
                 status: "pending",
                 description: payload.description || "Blinno Payment",
               });
@@ -720,12 +734,13 @@ serve(async (req) => {
             console.error("Database error (non-critical):", dbError);
           }
           
-          console.log("[DEBUG] Returning success response with checkout_url:", result.checkout_url || result.payment_url);
+          const checkoutUrl = result.checkout_url || result.payment_url || result.url;
+          console.log("[DEBUG] Returning success response with checkout_url:", checkoutUrl);
           
           return new Response(JSON.stringify({ 
             success: true, 
             data: result,
-            checkout_url: result.checkout_url || result.payment_url
+            checkout_url: checkoutUrl
           }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });

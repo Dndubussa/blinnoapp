@@ -25,6 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Json } from "@/integrations/supabase/types";
 import { useCurrency } from "@/hooks/useCurrency";
+import { Currency } from "@/lib/currency";
 import { getProductImage } from "@/lib/imageUtils";
 
 interface ShippingAddress {
@@ -96,7 +97,8 @@ export default function OrderTracking() {
             id,
             title,
             images,
-            category
+            category,
+            currency
           )
         `)
         .eq("order_id", orderId);
@@ -320,11 +322,11 @@ export default function OrderTracking() {
                             {item.products?.title || "Product"}
                           </Link>
                           <p className="text-sm text-muted-foreground">
-                            Qty: {item.quantity} × {formatPrice(item.price_at_purchase)}
+                            Qty: {item.quantity} × {formatPrice(item.price_at_purchase, (item.products?.currency || 'USD') as Currency)}
                           </p>
                         </div>
                         <p className="font-medium">
-                          {formatPrice(item.quantity * item.price_at_purchase)}
+                          {formatPrice(item.quantity * item.price_at_purchase, (item.products?.currency || 'USD') as Currency)}
                         </p>
                       </div>
                     ))}

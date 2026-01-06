@@ -3,11 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Currency } from "@/lib/currency";
 
 interface OrderItem {
   id: string;
   name: string;
   price: number;
+  currency?: string; // Product currency
   quantity: number;
   image_url?: string;
 }
@@ -23,7 +25,7 @@ interface OrderSummaryProps {
   couponCode?: string;
   onApplyCoupon?: (code: string) => void;
   isLoading?: boolean;
-  formatPrice: (price: number) => string;
+  formatPrice: (price: number, productCurrency?: Currency) => string;
 }
 
 /**
@@ -74,11 +76,11 @@ export function OrderSummary({
                   <div className="flex-1">
                     <p className="text-sm font-medium truncate">{item.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      Qty: {item.quantity} × {formatPrice(item.price)}
+                      Qty: {item.quantity} × {formatPrice(item.price, (item.currency || 'USD') as Currency)}
                     </p>
                   </div>
                   <div className="text-sm font-semibold text-right whitespace-nowrap ml-2">
-                    {formatPrice(item.price * item.quantity)}
+                    {formatPrice(item.price * item.quantity, (item.currency || 'USD') as Currency)}
                   </div>
                 </div>
               ))}

@@ -1380,7 +1380,7 @@ export default function Checkout() {
                           </p>
                         </div>
                         <p className="font-medium">
-                          {formatPrice(item.price * item.quantity)}
+                          {formatPrice(item.price * item.quantity, (item.currency || 'USD') as Currency)}
                         </p>
                       </div>
                     ))}

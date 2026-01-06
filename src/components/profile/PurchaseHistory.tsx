@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Package, ShoppingBag, Truck } from "lucide-react";
 import { format } from "date-fns";
 import { useCurrency } from "@/hooks/useCurrency";
+import { Currency } from "@/lib/currency";
 
 const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
@@ -43,7 +44,7 @@ export function PurchaseHistory() {
             .from("order_items")
             .select(`
               *,
-              products:product_id (id, title, images)
+              products:product_id (id, title, images, currency)
             `)
             .eq("order_id", order.id);
 
@@ -171,11 +172,11 @@ export function PurchaseHistory() {
                       {item.products?.title || "Product unavailable"}
                     </Link>
                     <p className="text-sm text-muted-foreground">
-                      Qty: {item.quantity} × {formatPrice(item.price_at_purchase)}
+                      Qty: {item.quantity} × {formatPrice(item.price_at_purchase, (item.products?.currency || 'USD') as Currency)}
                     </p>
                   </div>
                   <p className="font-medium">
-                    {formatPrice(item.quantity * item.price_at_purchase)}
+                    {formatPrice(item.quantity * item.price_at_purchase, (item.products?.currency || 'USD') as Currency)}
                   </p>
                 </div>
               ))}
