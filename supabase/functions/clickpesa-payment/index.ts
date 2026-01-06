@@ -718,7 +718,7 @@ serve(async (req) => {
                 amount: amount,
                 currency: payload.currency || "TZS",
                 network: null, // Not applicable for hosted checkout
-                phone_number: null, // Collected by ClickPesa
+                phone_number: payload.customer_phone || "", // Use provided phone or empty string for hosted checkout
                 reference: payload.reference,
                 clickpesa_reference: result.checkout_id || result.reference || result.transaction_id || null,
                 status: "pending",
@@ -734,8 +734,15 @@ serve(async (req) => {
             console.error("Database error (non-critical):", dbError);
           }
           
-          const checkoutUrl = result.checkout_url || result.payment_url || result.url;
+          // ClickPesa API returns checkoutLink, but we also check for other possible field names
+          // ClickPesa API returns checkoutLink, but we also check for other possible field names
+          const checkoutUrl = result.checkoutLink || result.checkout_url || result.payment_url || result.url;
           console.log("[DEBUG] Returning success response with checkout_url:", checkoutUrl);
+          
+          if (!checkoutUrl) {
+            console.error("[ERROR] No checkout URL found in ClickPesa response:", JSON.stringify(result, null, 2));
+            throw new Error("No checkout URL returned from ClickPesa");
+          }
           
           return new Response(JSON.stringify({ 
             success: true, 
