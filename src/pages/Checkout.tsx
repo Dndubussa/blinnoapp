@@ -1446,7 +1446,7 @@ export default function Checkout() {
                         {formatPrice(orderTotal)}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        â‰ˆ {formatPriceTZS(orderTotal)}
+                        ≈ {formatPriceTZS(orderTotal)}
                       </span>
                     </div>
                   </div>
@@ -1463,7 +1463,7 @@ export default function Checkout() {
                     )}
                   {allProductsDigital && (
                     <p className="text-xs text-green-600 dark:text-green-400 text-center">
-                      âœ“ Digital products are exempt from shipping and tax
+                      ✓ Digital products are exempt from shipping and tax
                     </p>
                   )}
                   {selectedCountry && countryConfig && !allProductsDigital && (

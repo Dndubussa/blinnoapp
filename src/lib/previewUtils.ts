@@ -7,45 +7,16 @@ import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Get preview URL that's accessible to all buyers
- * - If URL is from product-previews (public bucket), return as-is
- * - If URL is from product-files (private bucket), create public signed URL
- * - Handles both public and private bucket URLs
+ * - product-files bucket is now public, so return public URLs directly
+ * - product-previews bucket is public, return as-is
+ * - Handles both public bucket URLs
  */
 export async function getPreviewUrl(url: string | null | undefined): Promise<string | null> {
   if (!url) return null;
 
-  // If URL is from public product-previews bucket, return as-is
-  if (url.includes('/product-previews/')) {
+  // All product buckets are now public, return URLs as-is
+  if (url.includes('/product-previews/') || url.includes('/product-files/')) {
     return url;
-  }
-
-  // If URL is from private product-files bucket, create signed URL for preview access
-  if (url.includes('/product-files/')) {
-    try {
-      // Extract path from URL
-      const match = url.match(/\/product-files\/(.+)$/);
-      if (!match || !match[1]) {
-        console.warn('Could not extract path from product-files URL:', url);
-        return url; // Return original as fallback
-      }
-
-      const path = match[1];
-      
-      // Create signed URL valid for 1 year (previews should be long-lived)
-      const { data, error } = await supabase.storage
-        .from('product-files')
-        .createSignedUrl(path, 31536000); // 1 year in seconds
-
-      if (error) {
-        console.error('Error creating signed URL for preview:', path, error);
-        return url; // Return original URL as fallback
-      }
-
-      return data.signedUrl;
-    } catch (error) {
-      console.error('Error getting preview URL:', error);
-      return url; // Return original URL as fallback
-    }
   }
 
   // External URL or already public, return as-is

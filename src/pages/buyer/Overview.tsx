@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCurrency } from "@/hooks/useCurrency";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
+import { Currency } from "@/lib/currency";
 import {
   Package,
   Heart,
@@ -24,13 +26,14 @@ import {
 
 export default function BuyerOverview() {
   const { user, profile } = useAuth();
+  const { formatPrice } = useCurrency();
 
   const { data: orders, isLoading: ordersLoading } = useQuery({
     queryKey: ["buyer-orders", user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("*, order_items(*, products(*))")
+        .select("*, order_items(*, products(id, title, category, currency))")
         .eq("buyer_id", user?.id)
         .order("created_at", { ascending: false })
         .limit(5);
@@ -171,7 +174,7 @@ export default function BuyerOverview() {
               <div>
                 <p className="text-sm text-muted-foreground">Total Spent</p>
                 <p className="text-2xl font-bold text-foreground">
-                  ${stats?.totalSpent?.toFixed(2) || "0.00"}
+                  {formatPrice(stats?.totalSpent || 0)}
                 </p>
               </div>
             </div>
@@ -212,8 +215,14 @@ export default function BuyerOverview() {
                         Order #{order.id.slice(0, 8)}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {order.order_items?.length || 0} item{order.order_items?.length !== 1 ? 's' : ''} · $
-                        {Number(order.total_amount).toFixed(2)}
+                        {order.order_items?.length || 0} item{order.order_items?.length !== 1 ? 's' : ''} · {
+                          (() => {
+                            // Get currency from first order item, default to USD
+                            const firstItem = order.order_items?.[0];
+                            const currency = (firstItem?.products?.currency || 'USD') as Currency;
+                            return formatPrice(Number(order.total_amount), currency);
+                          })()
+                        }
                       </p>
                       {order.order_items && order.order_items.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">

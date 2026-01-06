@@ -75,25 +75,20 @@ const itemVariants = {
 
 export function CategoriesSection() {
   return (
-    <section id="products" className="relative bg-background dark:bg-slate-900/50 py-24 lg:py-32">
+    <section id="products" className="relative bg-white dark:bg-slate-950 py-16 lg:py-20">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mx-auto max-w-2xl text-center"
+          className="mx-auto max-w-2xl text-center mb-12"
         >
-          <span className="text-sm font-semibold uppercase tracking-wider text-primary">
-            Marketplace Categories
-          </span>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-            Everything you need,{" "}
-            <span className="text-primary">one platform</span>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+            Shop by Category
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Whether you're selling products, teaching skills, or hosting events, 
-            Blinno provides the tools to help you succeed.
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+            Browse products organized by category for easy shopping
           </p>
         </motion.div>
 
@@ -102,13 +97,13 @@ export function CategoriesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
           {categories.map((category) => (
             <motion.div
               key={category.id}
               variants={itemVariants}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-card dark:bg-slate-800 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              className="group relative overflow-hidden rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/30"
             >
               <div
                 className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${category.gradient}`}

@@ -466,13 +466,13 @@ export default function SearchPage() {
             </div>
 
             {isLoading ? (
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="rounded-xl border border-border bg-card p-4">
-                    <Skeleton className="aspect-square w-full rounded-lg bg-muted" />
-                    <Skeleton className="mt-4 h-5 w-3/4 bg-muted" />
-                    <Skeleton className="mt-2 h-4 w-1/2 bg-muted" />
-                    <Skeleton className="mt-4 h-6 w-1/4 bg-muted" />
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+                    <Skeleton className="aspect-[4/3] w-full rounded-lg bg-gray-100 dark:bg-slate-800" />
+                    <Skeleton className="mt-4 h-4 w-3/4 bg-gray-200 dark:bg-slate-700" />
+                    <Skeleton className="mt-2 h-4 w-1/2 bg-gray-200 dark:bg-slate-700" />
+                    <Skeleton className="mt-4 h-6 w-1/4 bg-gray-200 dark:bg-slate-700" />
                   </div>
                 ))}
               </div>
@@ -488,7 +488,7 @@ export default function SearchPage() {
                 </Button>
               </div>
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}

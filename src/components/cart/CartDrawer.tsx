@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ShoppingCart, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { X, ShoppingCart, Minus, Plus, Trash2, ShoppingBag, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -10,9 +10,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useCart } from "@/hooks/useCart";
 import { useCurrency } from "@/hooks/useCurrency";
 import { Currency } from "@/lib/currency";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function CartDrawer() {
   const {
@@ -26,6 +30,88 @@ export function CartDrawer() {
     setIsCartOpen,
   } = useCart();
   const { formatPrice } = useCurrency();
+  const [invalidItems, setInvalidItems] = useState<string[]>([]);
+  const [isValidating, setIsValidating] = useState(false);
+
+  // Validate cart items when drawer opens
+  useEffect(() => {
+    if (!isCartOpen || items.length === 0) {
+      setInvalidItems([]);
+      return;
+    }
+
+    const validateCartItems = async () => {
+      setIsValidating(true);
+      const productIds = items.map((item) => item.id);
+      
+      try {
+        const { data: products, error } = await supabase
+          .from("products")
+          .select("id, is_active, stock_quantity")
+          .in("id", productIds);
+
+        if (error) {
+          console.error("Error validating cart items:", error);
+          setIsValidating(false);
+          return;
+        }
+
+        const validProductIds = new Set(products?.map((p) => p.id) || []);
+        const invalid: string[] = [];
+
+        items.forEach((item) => {
+          const product = products?.find((p) => p.id === item.id);
+          
+          // Check if product exists
+          if (!product || !validProductIds.has(item.id)) {
+            invalid.push(item.id);
+            return;
+          }
+
+          // Check if product is active
+          if (!product.is_active) {
+            invalid.push(item.id);
+            return;
+          }
+
+          // Check stock quantity (null means unlimited for digital products)
+          if (
+            product.stock_quantity !== null &&
+            product.stock_quantity < item.quantity
+          ) {
+            invalid.push(item.id);
+            return;
+          }
+        });
+
+        if (invalid.length > 0) {
+          setInvalidItems(invalid);
+          
+          // Remove invalid items and notify user
+          invalid.forEach((itemId) => {
+            const item = items.find((i) => i.id === itemId);
+            if (item) {
+              removeFromCart(itemId);
+              toast.error(
+                `${item.title} is no longer available and has been removed from your cart.`,
+                { duration: 5000 }
+              );
+            }
+          });
+        } else {
+          setInvalidItems([]);
+        }
+      } catch (error) {
+        console.error("Error validating cart:", error);
+      } finally {
+        setIsValidating(false);
+      }
+    };
+
+    // Debounce validation to avoid too many requests
+    const timeoutId = setTimeout(validateCartItems, 500);
+    return () => clearTimeout(timeoutId);
+  }, [isCartOpen, items, removeFromCart]);
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -59,6 +145,12 @@ export function CartDrawer() {
           </div>
         ) : (
           <>
+            {isValidating && (
+              <Alert className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>Validating cart items...</AlertDescription>
+              </Alert>
+            )}
             <ScrollArea className="flex-1 pr-4">
               <AnimatePresence mode="popLayout">
                 {items.map((item) => (
@@ -137,10 +229,15 @@ export function CartDrawer() {
 
                           {/* Price */}
                           <span className="font-semibold text-primary">
-                            {formatPrice(
-                              item.price * item.quantity, 
-                              (item.currency || 'USD') as Currency
-                            )}
+                            {(() => {
+                              const price = Number(item.price) || 0;
+                              const quantity = Number(item.quantity) || 0;
+                              const total = price * quantity;
+                              if (isNaN(total) || total <= 0) {
+                                return formatPrice(0, (item.currency || 'USD') as Currency);
+                              }
+                              return formatPrice(total, (item.currency || 'USD') as Currency);
+                            })()}
                           </span>
                         </div>
                       </div>
@@ -157,7 +254,9 @@ export function CartDrawer() {
                 <span className="text-sm text-muted-foreground">
                   Subtotal ({totalItems} items)
                 </span>
-                <span className="text-lg font-bold">{formatPrice(totalPrice)}</span>
+                <span className="text-lg font-bold">
+                  {isNaN(totalPrice) || totalPrice <= 0 ? formatPrice(0) : formatPrice(totalPrice)}
+                </span>
               </div>
 
               <div className="flex flex-col gap-2">

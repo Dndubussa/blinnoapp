@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Play, Pause, Scissors } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { getFileUrl } from "@/lib/uploadUtils";
 
 interface PreviewSegmentSelectorProps {
   sourceFileUrl: string | null; // URL to the original audio/video file
@@ -33,10 +34,47 @@ export function PreviewSegmentSelector({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [playableUrl, setPlayableUrl] = useState<string | null>(null);
+  const [isLoadingUrl, setIsLoadingUrl] = useState(false);
+
+  // Convert sourceFileUrl to a playable URL (product-files is now public)
+  useEffect(() => {
+    if (!sourceFileUrl) {
+      setPlayableUrl(null);
+      return;
+    }
+
+    const loadPlayableUrl = async () => {
+      setIsLoadingUrl(true);
+      try {
+        // Check if URL is already a full URL (http/https)
+        if (sourceFileUrl.startsWith('http://') || sourceFileUrl.startsWith('https://')) {
+          // Already a full URL, use as-is (product-files is now public)
+          setPlayableUrl(sourceFileUrl);
+          setIsLoadingUrl(false);
+          return;
+        }
+
+        // Path format (e.g., "user123/file.mp3" or "/user123/file.mp3")
+        // Convert to public URL since product-files bucket is now public
+        const path = sourceFileUrl.startsWith('/') ? sourceFileUrl.slice(1) : sourceFileUrl;
+        const publicUrl = await getFileUrl('product-files', path);
+        setPlayableUrl(publicUrl);
+      } catch (error) {
+        console.error('Error loading playable URL:', error);
+        toast.error('Failed to load media file. Please try uploading again.');
+        setPlayableUrl(null);
+      } finally {
+        setIsLoadingUrl(false);
+      }
+    };
+
+    loadPlayableUrl();
+  }, [sourceFileUrl]);
 
   useEffect(() => {
     const media = mediaRef.current;
-    if (!media) return;
+    if (!media || !playableUrl) return;
 
     const handleTimeUpdate = () => {
       const time = media.currentTime;
@@ -64,16 +102,24 @@ export function PreviewSegmentSelector({
       media.currentTime = previewStartTime; // Reset to preview start
     };
 
+    const handleError = (e: Event) => {
+      console.error('Media playback error:', e);
+      toast.error('Failed to play media. Please check the file format and try again.');
+      setIsPlaying(false);
+    };
+
     media.addEventListener("timeupdate", handleTimeUpdate);
     media.addEventListener("loadedmetadata", handleLoadedMetadata);
     media.addEventListener("ended", handleEnded);
+    media.addEventListener("error", handleError);
 
     return () => {
       media.removeEventListener("timeupdate", handleTimeUpdate);
       media.removeEventListener("loadedmetadata", handleLoadedMetadata);
       media.removeEventListener("ended", handleEnded);
+      media.removeEventListener("error", handleError);
     };
-  }, [previewStartTime, onPreviewStartTimeChange]);
+  }, [playableUrl, previewStartTime, onPreviewStartTimeChange]);
 
   const togglePlay = () => {
     const media = mediaRef.current;
@@ -203,19 +249,31 @@ export function PreviewSegmentSelector({
       </div>
 
       {/* Media Element (hidden) */}
-      {sourceType === "audio" ? (
-        <audio
-          ref={mediaRef as React.RefObject<HTMLAudioElement>}
-          src={sourceFileUrl}
-          preload="metadata"
-        />
+      {isLoadingUrl ? (
+        <div className="text-center py-4 text-sm text-muted-foreground">
+          Loading media file...
+        </div>
+      ) : playableUrl ? (
+        sourceType === "audio" ? (
+          <audio
+            ref={mediaRef as React.RefObject<HTMLAudioElement>}
+            src={playableUrl}
+            preload="metadata"
+            crossOrigin="anonymous"
+          />
+        ) : (
+          <video
+            ref={mediaRef as React.RefObject<HTMLVideoElement>}
+            src={playableUrl}
+            preload="metadata"
+            className="hidden"
+            crossOrigin="anonymous"
+          />
+        )
       ) : (
-        <video
-          ref={mediaRef as React.RefObject<HTMLVideoElement>}
-          src={sourceFileUrl}
-          preload="metadata"
-          className="hidden"
-        />
+        <div className="text-center py-4 text-sm text-destructive">
+          Failed to load media file. Please try uploading again.
+        </div>
       )}
 
       {/* Preview Start Time Selector */}
@@ -230,7 +288,7 @@ export function PreviewSegmentSelector({
           max={maxStartTime}
           step={0.5}
           onValueChange={handlePreviewStartChange}
-          disabled={disabled || duration === 0}
+          disabled={disabled || duration === 0 || !playableUrl || isLoadingUrl}
           className="cursor-pointer"
         />
         <div className="flex justify-between text-xs text-muted-foreground">
@@ -253,7 +311,7 @@ export function PreviewSegmentSelector({
           max={previewEndTime}
           step={0.1}
           onValueChange={handleSeek}
-          disabled={disabled || duration === 0}
+          disabled={disabled || duration === 0 || !playableUrl || isLoadingUrl}
           className="cursor-pointer"
         />
         <div className="flex justify-between text-xs text-muted-foreground">
@@ -269,7 +327,7 @@ export function PreviewSegmentSelector({
           variant="outline"
           size="lg"
           onClick={togglePlay}
-          disabled={disabled || duration === 0}
+          disabled={disabled || duration === 0 || !playableUrl || isLoadingUrl}
           className="gap-2"
         >
           {isPlaying ? (

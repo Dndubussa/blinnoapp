@@ -128,15 +128,19 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-white dark:bg-slate-950">
       <Navbar />
       <main className="pt-20">
-        {/* Header */}
-        <section className="border-b border-border bg-muted/30 py-12">
+        {/* Header - Marketplace Style */}
+        <section className="border-b border-gray-200 dark:border-slate-800 bg-gradient-to-b from-gray-50 to-white dark:from-slate-900 dark:to-slate-950 py-8">
           <div className="container mx-auto px-4 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Browse Products
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              Discover amazing products from sellers around the world
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+                  Shop All Products
+                </h1>
+                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                  Discover thousands of products from trusted sellers
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -180,7 +184,7 @@ export default function ProductsPage() {
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                      ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                       : "space-y-4"
                   }
                 >
@@ -213,7 +217,7 @@ export default function ProductsPage() {
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                      ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                       : "space-y-4"
                   }
                 >

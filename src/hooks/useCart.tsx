@@ -109,15 +109,35 @@ export function CartProvider({ children }: { children: ReactNode }) {
     toast.success("Cart cleared");
   };
 
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems = items.reduce((sum, item) => {
+    const qty = Number(item.quantity) || 0;
+    return sum + (isNaN(qty) ? 0 : qty);
+  }, 0);
   
   // Calculate total price with currency conversion to USD
+  // Add validation to prevent NaN values
   const totalPrice = items.reduce((sum, item) => {
+    const price = Number(item.price) || 0;
+    const quantity = Number(item.quantity) || 0;
+    
+    // Skip invalid items (NaN or invalid values)
+    if (isNaN(price) || isNaN(quantity) || price <= 0 || quantity <= 0) {
+      console.warn(`Invalid cart item: ${item.id}`, { price, quantity });
+      return sum;
+    }
+    
     const itemCurrency = (item.currency || 'USD') as Currency;
     const priceInUSD = itemCurrency === 'USD' 
-      ? item.price 
-      : convertCurrency(item.price, itemCurrency, 'USD');
-    return sum + priceInUSD * item.quantity;
+      ? price 
+      : convertCurrency(price, itemCurrency, 'USD');
+    
+    // Validate converted price
+    if (isNaN(priceInUSD) || priceInUSD <= 0) {
+      console.warn(`Invalid converted price for item: ${item.id}`, { priceInUSD });
+      return sum;
+    }
+    
+    return sum + priceInUSD * quantity;
   }, 0);
 
   return (

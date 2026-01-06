@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCurrency } from "@/hooks/useCurrency";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,11 +11,13 @@ import { Link } from "react-router-dom";
 import { Package, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { getProductImage } from "@/lib/imageUtils";
+import { Currency } from "@/lib/currency";
 
 const PAGE_SIZE = 10;
 
 export default function BuyerOrders() {
   const { user } = useAuth();
+  const { formatPrice } = useCurrency();
   const [page, setPage] = useState(1);
 
   const { data: result, isLoading } = useQuery({
@@ -24,7 +27,7 @@ export default function BuyerOrders() {
       
       const { data, error, count } = await supabase
         .from("orders")
-        .select("*, order_items(*, products(*))", { count: "exact" })
+        .select("*, order_items(*, products(id, title, category, currency))", { count: "exact" })
         .eq("buyer_id", user?.id)
         .order("created_at", { ascending: false })
         .range(offset, offset + PAGE_SIZE - 1);
@@ -126,7 +129,12 @@ export default function BuyerOrders() {
                   <div className="flex items-center gap-4">
                     <div className="text-right">
                       <p className="text-lg font-bold text-foreground">
-                        ${Number(order.total_amount).toFixed(2)}
+                        {(() => {
+                          // Get currency from first order item, default to USD
+                          const firstItem = order.order_items?.[0];
+                          const currency = (firstItem?.products?.currency || 'USD') as Currency;
+                          return formatPrice(Number(order.total_amount), currency);
+                        })()}
                       </p>
                     </div>
                     <Button variant="outline" size="sm" asChild>

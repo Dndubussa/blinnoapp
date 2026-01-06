@@ -223,45 +223,57 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="group overflow-hidden rounded-xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-lg"
+        className="group relative bg-white dark:bg-slate-900 rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-primary/20"
       >
-        {/* Image with navigation */}
-        <div className="relative aspect-square overflow-hidden">
+        {/* Image Container - Standard E-commerce Aspect Ratio */}
+        <div className="relative aspect-[4/3] bg-gray-100 dark:bg-slate-800 overflow-hidden">
           <img
             src={getImageSrc(currentImageIndex)}
             alt={product.title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             onError={() => handleImageError(currentImageIndex)}
+            loading="lazy"
           />
+          
+          {/* Out of Stock Overlay */}
           {isOutOfStock && (
-            <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-              <span className="text-sm font-medium text-muted-foreground">Out of Stock</span>
+            <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+              <span className="text-sm font-semibold text-white bg-red-500 px-3 py-1 rounded">Out of Stock</span>
             </div>
           )}
+          
+          {/* Category Badge - Top Left */}
           <Badge
-            variant="outline"
-            className={`absolute left-3 top-3 ${getCategoryColor(product.category)}`}
+            variant="secondary"
+            className="absolute left-2 top-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm text-xs font-medium"
           >
             {product.category}
           </Badge>
           
-          {/* Image Navigation */}
+          {/* Stock Badge - Top Right */}
+          {!isOutOfStock && (
+            <div className="absolute right-2 top-2">
+              <StockBadge stockQuantity={product.stock_quantity} variant="compact" />
+            </div>
+          )}
+          
+          {/* Image Navigation - Only on Hover */}
           {hasMultipleImages && (
             <>
               <button
                 onClick={handlePrevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
+                className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-white dark:hover:bg-slate-800"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={handleNextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-white dark:hover:bg-slate-800"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
               {/* Dot indicators */}
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                 {images.map((_, idx) => (
                   <button
                     key={idx}
@@ -270,45 +282,45 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
                       e.stopPropagation();
                       setCurrentImageIndex(idx);
                     }}
-                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                      idx === currentImageIndex ? 'bg-primary' : 'bg-background/60'
+                    className={`h-2 w-2 rounded-full transition-all ${
+                      idx === currentImageIndex 
+                        ? 'bg-primary w-6' 
+                        : 'bg-white/60 hover:bg-white/80'
                     }`}
                   />
                 ))}
               </div>
             </>
           )}
+
+          {/* Quick Add to Cart - Appears on Hover */}
+          <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button 
+              size="sm" 
+              disabled={isOutOfStock} 
+              onClick={handleAddToCart}
+              className="h-9 w-9 p-0 rounded-full shadow-lg"
+            >
+              <ShoppingCart className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="p-4 flex flex-col h-full">
-          {/* Title - Larger and more prominent */}
-          <h3 className="font-bold text-base line-clamp-2 text-foreground leading-snug">
+        {/* Product Info */}
+        <div className="p-4">
+          {/* Title */}
+          <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100 line-clamp-2 mb-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
             {product.title}
           </h3>
 
-          {/* Description */}
-          <p className="mt-2 text-xs text-muted-foreground line-clamp-2">
-            {product.description || "No description available"}
-          </p>
-
-          {/* Rating and Seller */}
-          <div className="mt-3 space-y-2">
-            <div>
-              <ProductRating productId={product.id} showCount={true} size="sm" />
-            </div>
-            <Link
-              to={`/seller/${product.seller_id}`}
-              className="text-xs text-primary hover:underline inline-block"
-              onClick={(e) => e.stopPropagation()}
-            >
-              Visit Store →
-            </Link>
+          {/* Rating */}
+          <div className="mb-2">
+            <ProductRating productId={product.id} showCount={true} size="sm" />
           </div>
 
           {/* Audio Preview for Music Products */}
           {product.category === "Music" && product.attributes?.previewFile && (
-            <div className="mt-3">
+            <div className="mb-2">
               <CompactAudioPreview
                 previewUrl={product.attributes.previewFile}
                 artist={product.attributes.artist}
@@ -318,15 +330,21 @@ export function ProductCard({ product, viewMode }: ProductCardProps) {
             </div>
           )}
 
-          {/* Price and Action - Separated by flex-1 */}
-          <div className="mt-auto pt-3 border-t border-border/50 flex items-end justify-between gap-2">
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold text-primary">
+          {/* Price and Add to Cart */}
+          <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-slate-800">
+            <div>
+              <span className="text-xl font-bold text-primary">
                 {formatPrice(product.price, (product.currency || 'USD') as Currency)}
               </span>
             </div>
-            <Button size="default" disabled={isOutOfStock} onClick={handleAddToCart} className="h-10 w-10 p-0">
-              <ShoppingCart className="h-5 w-5" />
+            <Button 
+              size="sm" 
+              disabled={isOutOfStock} 
+              onClick={handleAddToCart}
+              className="h-8 px-3 text-xs"
+            >
+              <ShoppingCart className="h-3.5 w-3.5 mr-1.5" />
+              Add
             </Button>
           </div>
         </div>

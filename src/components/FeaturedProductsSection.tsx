@@ -156,16 +156,13 @@ export const FeaturedProductsSection = () => {
   };
 
   return (
-    <section className="py-16 px-4 md:px-8 lg:px-16 max-w-7xl mx-auto">
+    <section className="py-16 px-4 md:px-8 lg:px-16 max-w-7xl mx-auto bg-white dark:bg-slate-950">
       <div className="text-center mb-12">
-        <Badge variant="secondary" className="mb-4">
-          Top Sellers
-        </Badge>
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           Featured Products
         </h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Discover our most popular items loved by thousands of customers
+        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Shop our handpicked selection of best-selling products
         </p>
       </div>
 
@@ -183,8 +180,8 @@ export const FeaturedProductsSection = () => {
               className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
               <Link to={`/product/${product.id}`}>
-                <Card className="group overflow-hidden border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300 bg-card h-full">
-                  <div className="relative aspect-square overflow-hidden bg-muted">
+                <Card className="group overflow-hidden border border-gray-200 dark:border-slate-800 hover:border-primary/30 hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-900 h-full">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-slate-800">
                     {(() => {
                       const imageUrl = getProductImageSync(product);
                       const hasValidImage = imageUrl && imageUrl !== "/placeholder.svg";
@@ -193,7 +190,7 @@ export const FeaturedProductsSection = () => {
                         <img
                           src={imageUrl}
                           alt={product.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           onError={(e) => {
                             e.currentTarget.src = "/placeholder.svg";
                           }}
@@ -211,15 +208,15 @@ export const FeaturedProductsSection = () => {
                         </div>
                       );
                     })()}
-                    <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
+                    <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-semibold shadow-lg">
                       Featured
                     </Badge>
                   </div>
                   <CardContent className="p-4">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1.5">
                       {product.category}
                     </p>
-                    <h3 className="font-semibold text-foreground line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100 line-clamp-2 mb-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
                       {product.title}
                     </h3>
                     
@@ -228,29 +225,19 @@ export const FeaturedProductsSection = () => {
                       {renderStars(product.avgRating)}
                       <span className="text-xs text-muted-foreground ml-1">
                         {product.reviewCount > 0
-                          ? `(${product.avgRating.toFixed(1)}) · ${product.reviewCount} review${product.reviewCount !== 1 ? "s" : ""}`
-                          : "No reviews yet"}
+                          ? `(${product.avgRating.toFixed(1)}) · ${product.reviewCount}`
+                          : "No reviews"}
                       </span>
                     </div>
 
-                    {/* Review Highlight */}
-                    {product.latestReview && product.latestReview.content && (
-                      <div className="bg-muted/50 rounded-md p-2 mb-3">
-                        <div className="flex items-start gap-1.5">
-                          <Quote className="w-3 h-3 text-muted-foreground flex-shrink-0 mt-0.5" />
-                          <p className="text-xs text-muted-foreground line-clamp-2 italic">
-                            {product.latestReview.content}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex items-center justify-between mt-auto">
-                      <span className="text-lg font-bold text-foreground">
+                    {/* Price and Add to Cart */}
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-slate-800">
+                      <span className="text-xl font-bold text-primary">
                         {formatPrice(product.price, (product.currency || 'USD') as Currency)}
                       </span>
-                      <Button size="sm" variant="outline" className="gap-1">
-                        <ShoppingCart className="w-4 h-4" />
+                      <Button size="sm" variant="outline" className="h-8 px-3 text-xs">
+                        <ShoppingCart className="w-3.5 h-3.5 mr-1.5" />
+                        Add
                       </Button>
                     </div>
                   </CardContent>

@@ -131,12 +131,12 @@ export async function getSignedUrl(bucket: string, path: string, expiresIn: numb
 
 /**
  * Get appropriate URL for a file based on bucket type
- * - Public buckets (product-images): returns public URL
- * - Private buckets (product-files): returns signed URL
+ * - Public buckets (product-images, product-files, product-previews): returns public URL
+ * - Private buckets: returns signed URL
  */
 export async function getFileUrl(bucket: string, path: string): Promise<string> {
-  // Public buckets can use direct public URLs
-  if (bucket === 'product-images') {
+  // All product-related buckets are now public
+  if (bucket === 'product-images' || bucket === 'product-files' || bucket === 'product-previews') {
     return getPublicUrl(bucket, path);
   }
   

@@ -4,11 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { useCurrency } from "@/hooks/useCurrency";
+import { Currency } from "@/lib/currency";
 
 
 export default function BuyerWishlist() {
   const { items, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
 
 
   return (
@@ -49,7 +52,10 @@ export default function BuyerWishlist() {
                   {product.category}
                 </p>
                 <p className="text-lg font-bold text-foreground mb-3">
-                  ${typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price || '0').toFixed(2)}
+                  {formatPrice(
+                    typeof product.price === 'number' ? product.price : parseFloat(product.price || '0'),
+                    (product.currency || 'USD') as Currency
+                  )}
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -60,6 +66,7 @@ export default function BuyerWishlist() {
                         id: product.id,
                         title: product.title,
                         price: typeof product.price === 'number' ? product.price : parseFloat(product.price || '0'),
+                        currency: product.currency || 'USD',
                         image: product.image,
                         seller_id: product.seller_id,
                         stock_quantity: product.stock_quantity,

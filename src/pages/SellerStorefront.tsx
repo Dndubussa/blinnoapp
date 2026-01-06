@@ -219,11 +219,11 @@ export default function SellerStorefront() {
             </div>
 
             {productsLoading ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {[...Array(8)].map((_, i) => (
                   <Card key={i}>
                     <CardContent className="p-0">
-                      <Skeleton className="aspect-square w-full" />
+                      <Skeleton className="aspect-[4/3] w-full" />
                       <div className="p-4 space-y-2">
                         <Skeleton className="h-4 w-3/4" />
                         <Skeleton className="h-4 w-1/2" />
@@ -233,7 +233,7 @@ export default function SellerStorefront() {
                 ))}
               </div>
             ) : products && products.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {products.map((product) => (
                   <ProductCard
                     key={product.id}
