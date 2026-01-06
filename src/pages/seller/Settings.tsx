@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 
 export default function Settings() {
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const { toast } = useToast();
   const { userCurrency, setUserCurrency } = useCurrency();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -71,6 +71,8 @@ export default function Settings() {
         variant: "destructive",
       });
     } else {
+      // Refresh profile to get updated data
+      await refreshProfile();
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully.",
@@ -258,7 +260,11 @@ export default function Settings() {
                     <Label htmlFor="currency">Preferred Currency</Label>
                     <Select
                       value={userCurrency}
-                      onValueChange={(value) => setUserCurrency(value as Currency)}
+                      onValueChange={async (value) => {
+                        await setUserCurrency(value as Currency);
+                        // Refresh profile to get updated currency preference
+                        await refreshProfile();
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue />

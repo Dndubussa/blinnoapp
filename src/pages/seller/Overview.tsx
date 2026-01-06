@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useCurrency, Currency } from "@/hooks/useCurrency";
 import {
   AreaChart,
   Area,
@@ -41,35 +42,11 @@ interface Stats {
   inactiveProducts: number;
 }
 
-const statCards = [
-  {
-    title: "Total Products",
-    icon: Package,
-    key: "totalProducts" as keyof Stats,
-    format: (val: number) => val.toString(),
-  },
-  {
-    title: "Total Orders",
-    icon: ShoppingCart,
-    key: "totalOrders" as keyof Stats,
-    format: (val: number) => val.toString(),
-  },
-  {
-    title: "Total Revenue",
-    icon: DollarSign,
-    key: "totalRevenue" as keyof Stats,
-    format: (val: number) => `$${val.toFixed(2)}`,
-  },
-  {
-    title: "Avg. Order Value",
-    icon: TrendingUp,
-    key: "averageOrderValue" as keyof Stats,
-    format: (val: number) => `$${val.toFixed(2)}`,
-  },
-];
+// statCards will be defined inside component to access formatPrice
 
 export default function Overview() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const { formatPrice } = useCurrency();
   const [stats, setStats] = useState<Stats>({
     totalProducts: 0,
     totalOrders: 0,
@@ -95,6 +72,34 @@ export default function Overview() {
   });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Define statCards inside component to access formatPrice
+  const statCards = [
+    {
+      title: "Total Products",
+      icon: Package,
+      key: "totalProducts" as keyof Stats,
+      format: (val: number) => val.toString(),
+    },
+    {
+      title: "Total Orders",
+      icon: ShoppingCart,
+      key: "totalOrders" as keyof Stats,
+      format: (val: number) => val.toString(),
+    },
+    {
+      title: "Total Revenue",
+      icon: DollarSign,
+      key: "totalRevenue" as keyof Stats,
+      format: (val: number) => formatPrice(val, (profile?.currency_preference || 'USD') as Currency),
+    },
+    {
+      title: "Avg. Order Value",
+      icon: TrendingUp,
+      key: "averageOrderValue" as keyof Stats,
+      format: (val: number) => formatPrice(val, (profile?.currency_preference || 'USD') as Currency),
+    },
+  ];
 
   useEffect(() => {
     if (!user) return;

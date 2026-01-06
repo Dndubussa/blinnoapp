@@ -4,6 +4,7 @@ import { TrendingUp, DollarSign, Package, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCurrency, Currency } from "@/hooks/useCurrency";
 import {
   AreaChart,
   Area,
@@ -34,7 +35,8 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function Analytics() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const { formatPrice } = useCurrency();
   const [stats, setStats] = useState({
     totalRevenue: 0,
     totalOrders: 0,
@@ -268,7 +270,7 @@ export default function Analytics() {
         {[
           {
             title: "Total Revenue",
-            value: `$${stats.totalRevenue.toFixed(2)}`,
+            value: formatPrice(stats.totalRevenue, (profile?.currency_preference || 'USD') as Currency),
             icon: DollarSign,
             change: previousStats.totalRevenue > 0
               ? `${((stats.totalRevenue - previousStats.totalRevenue) / previousStats.totalRevenue * 100).toFixed(1)}%`
@@ -295,7 +297,7 @@ export default function Analytics() {
           },
           {
             title: "Avg. Order Value",
-            value: `$${stats.avgOrderValue.toFixed(2)}`,
+            value: formatPrice(stats.avgOrderValue, (profile?.currency_preference || 'USD') as Currency),
             icon: Users,
             change: previousStats.avgOrderValue > 0
               ? `${((stats.avgOrderValue - previousStats.avgOrderValue) / previousStats.avgOrderValue * 100).toFixed(1)}%`

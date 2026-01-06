@@ -25,6 +25,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   hasRole: (role: AppRole) => boolean;
   becomeSeller: () => Promise<{ error: Error | null }>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -60,9 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchProfile = async (userId: string): Promise<void> => {
+  const fetchProfile = async (userId: string, forceRefresh: boolean = false): Promise<void> => {
     // Skip if we already have profile for this user (prevent unnecessary refetches)
-    if (profile && profile.id === userId) {
+    // Unless forceRefresh is true (e.g., after an update)
+    if (profile && profile.id === userId && !forceRefresh) {
       return;
     }
 
@@ -442,6 +444,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null };
   };
 
+  const refreshProfile = async () => {
+    if (user) {
+      await fetchProfile(user.id, true);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -455,6 +463,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signOut,
         hasRole,
         becomeSeller,
+        refreshProfile,
       }}
     >
       {children}

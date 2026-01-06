@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 
 export default function BuyerSettings() {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, refreshProfile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { userCurrency, setUserCurrency } = useCurrency();
@@ -45,6 +45,9 @@ export default function BuyerSettings() {
         .eq("id", user?.id);
 
       if (error) throw error;
+
+      // Refresh profile to get updated data
+      await refreshProfile();
 
       toast({
         title: "Profile updated",
@@ -141,7 +144,11 @@ export default function BuyerSettings() {
             <Label htmlFor="currency">Preferred Currency</Label>
             <Select
               value={userCurrency}
-              onValueChange={(value) => setUserCurrency(value as Currency)}
+              onValueChange={async (value) => {
+                await setUserCurrency(value as Currency);
+                // Refresh profile to get updated currency preference
+                await refreshProfile();
+              }}
             >
               <SelectTrigger>
                 <SelectValue />

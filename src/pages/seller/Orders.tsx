@@ -22,6 +22,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -515,6 +516,9 @@ export default function Orders() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Tracking Information</DialogTitle>
+            <DialogDescription>
+              Add tracking details for the shipment. The customer will be notified automatically.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">

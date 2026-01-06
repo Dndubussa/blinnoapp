@@ -143,8 +143,8 @@ export default function Checkout() {
           return;
         }
 
-        const productIds = items.map((item) => item.id);
-        const sellerIds = [...new Set(items.map((item) => item.seller_id))];
+        const productIds = items.map((item) => item.id).filter(Boolean);
+        const sellerIds = [...new Set(items.map((item) => item.seller_id).filter(Boolean))];
 
         // Fetch product categories
         const { data: products, error: productsError } = await supabase
@@ -163,26 +163,30 @@ export default function Checkout() {
           setProductCategories(categoryMap);
         }
 
-        // Fetch seller countries from profiles
-        const { data: sellerProfiles, error: profilesError } = await supabase
-          .from("profiles")
-          .select("id, country")
-          .in("id", sellerIds);
+        // Fetch seller countries from profiles (only if we have valid seller IDs)
+        if (sellerIds.length > 0) {
+          const { data: sellerProfiles, error: profilesError } = await supabase
+            .from("profiles")
+            .select("id, country")
+            .in("id", sellerIds);
 
-        if (profilesError) {
-          console.error("Error fetching seller profiles:", profilesError);
-          // Fallback: set all to null if fetch fails
-          const sellerCountryMap: Record<string, string | null> = {};
-          sellerIds.forEach((id) => {
-            sellerCountryMap[id] = null;
-          });
-          setSellerCountries(sellerCountryMap);
-        } else if (sellerProfiles) {
-          const sellerCountryMap: Record<string, string | null> = {};
-          sellerProfiles.forEach((profile) => {
-            sellerCountryMap[profile.id] = profile.country;
-          });
-          setSellerCountries(sellerCountryMap);
+          if (profilesError) {
+            console.error("Error fetching seller profiles:", profilesError);
+            // Fallback: set all to null if fetch fails
+            const sellerCountryMap: Record<string, string | null> = {};
+            sellerIds.forEach((id) => {
+              sellerCountryMap[id] = null;
+            });
+            setSellerCountries(sellerCountryMap);
+          } else if (sellerProfiles) {
+            const sellerCountryMap: Record<string, string | null> = {};
+            sellerProfiles.forEach((profile) => {
+              sellerCountryMap[profile.id] = profile.country;
+            });
+            setSellerCountries(sellerCountryMap);
+          }
+        } else {
+          setSellerCountries({});
         }
       } catch (error) {
         console.error("Unexpected error fetching product info:", error);
