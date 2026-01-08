@@ -1,0 +1,252 @@
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useCurrency } from "@/hooks/useCurrency";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router-dom";
+import { Package, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { format } from "date-fns";
+import { getProductImage } from "@/lib/imageUtils";
+import { Currency } from "@/lib/currency";
+
+const PAGE_SIZE = 10;
+
+export default function BuyerOrders() {
+  const { user } = useAuth();
+  const { formatPrice } = useCurrency();
+  const [page, setPage] = useState(1);
+
+  const { data: result, isLoading } = useQuery({
+    queryKey: ["buyer-orders", user?.id, page],
+    queryFn: async () => {
+      const offset = (page - 1) * PAGE_SIZE;
+      
+      const { data, error, count } = await supabase
+        .from("orders")
+        .select("*, order_items(*, products(id, title, category, currency))", { count: "exact" })
+        .eq("buyer_id", user?.id)
+        .order("created_at", { ascending: false })
+        .range(offset, offset + PAGE_SIZE - 1);
+
+      if (error) throw error;
+      return { orders: data || [], total: count || 0 };
+    },
+    enabled: !!user?.id,
+  });
+
+  const orders = result?.orders || [];
+  const totalCount = result?.total || 0;
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
+      case "paid":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+      case "processing":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+      case "shipped":
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
+      case "delivered":
+      case "completed":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+      case "cancelled":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300";
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-32 w-full" />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">My Orders</h1>
+        <p className="text-muted-foreground">Track and manage your orders</p>
+      </div>
+
+      {orders && orders.length > 0 ? (
+        <div className="space-y-4">
+          {orders.map((order) => (
+            <Card key={order.id}>
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center flex-shrink-0">
+                      <Package className="w-6 h-6 text-muted-foreground" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-semibold text-foreground">
+                          Order #{order.id.slice(0, 8)}
+                        </p>
+                        <Badge className={getStatusColor(order.status)}>
+                          {order.status}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {format(new Date(order.created_at), "MMM d, yyyy 'at' h:mm a")}
+                      </p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {order.order_items?.length || 0} item{order.order_items?.length !== 1 ? 's' : ''}
+                      </p>
+                      {order.order_items && order.order_items.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {order.order_items.slice(0, 3).map((item: any, idx: number) => {
+                            const isDigital = ["Music", "Books", "Courses"].includes(item.products?.category);
+                            return (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {item.products?.category || "Unknown"}
+                                {isDigital && (
+                                  <span className="ml-1 text-purple-600 dark:text-purple-400">• Digital</span>
+                                )}
+                              </Badge>
+                            );
+                          })}
+                          {order.order_items.length > 3 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{order.order_items.length - 3} more
+                            </Badge>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-foreground">
+                        {(() => {
+                          // Get currency from first order item, default to USD
+                          const firstItem = order.order_items?.[0];
+                          const currency = (firstItem?.products?.currency || 'USD') as Currency;
+                          return formatPrice(Number(order.total_amount), currency);
+                        })()}
+                      </p>
+                    </div>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to={`/order/${order.id}`}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Track Order
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Order Items Preview */}
+                {order.order_items && order.order_items.length > 0 && (
+                  <div className="mt-4 pt-4 border-t flex gap-2 overflow-x-auto">
+                    {order.order_items.slice(0, 4).map((item: any) => (
+                      <div
+                        key={item.id}
+                        className="w-16 h-16 rounded-lg bg-muted flex-shrink-0 overflow-hidden"
+                      >
+                        {(() => {
+                          const imageUrl = item.products ? getProductImage(item.products) : "/placeholder.svg";
+                          return imageUrl !== "/placeholder.svg" ? (
+                            <img
+                              src={imageUrl}
+                              alt={item.products?.title || "Product"}
+                              className="w-full h-full object-cover"
+                              width={64}
+                              height={64}
+                              loading="lazy"
+                              onError={(e) => {
+                                e.currentTarget.src = "/placeholder.svg";
+                              }}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                              N/A
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    ))}
+                    {order.order_items.length > 4 && (
+                      <div className="w-16 h-16 rounded-lg bg-muted flex-shrink-0 flex items-center justify-center text-muted-foreground text-sm">
+                        +{order.order_items.length - 4}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1 || isLoading}
+              >
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Previous
+              </Button>
+
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <Button
+                    key={p}
+                    variant={p === page ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setPage(p)}
+                    disabled={isLoading}
+                    className="min-w-[40px]"
+                  >
+                    {p}
+                  </Button>
+                ))}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages || isLoading}
+              >
+                Next
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </div>
+          )}
+
+          <div className="text-center text-sm text-muted-foreground mt-4">
+            Showing {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, totalCount)} of {totalCount} orders
+          </div>
+        </div>
+      ) : (
+        <Card>
+          <CardContent className="py-16 text-center">
+            <Package className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
+              No orders yet
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              Start shopping to see your orders here
+            </p>
+            <Button asChild>
+              <Link to="/products">Browse Products</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
